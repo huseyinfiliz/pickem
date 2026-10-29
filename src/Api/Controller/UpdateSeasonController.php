@@ -2,16 +2,16 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
+use Carbon\Carbon;
 use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Http\RequestUtil;
 use HuseyinFiliz\Pickem\Api\Serializer\SeasonSerializer;
 use HuseyinFiliz\Pickem\Season;
 use HuseyinFiliz\Pickem\Validator\SeasonValidator;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str; // EKLENDİ
+use Illuminate\Support\Arr; // EKLENDİ
+use Illuminate\Support\Str;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
-use Carbon\Carbon;
 
 class UpdateSeasonController extends AbstractShowController
 {

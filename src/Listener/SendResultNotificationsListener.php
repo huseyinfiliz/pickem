@@ -9,7 +9,7 @@ use HuseyinFiliz\Pickem\Pick;
 use Illuminate\Database\Eloquent\Events\Saved;
 
 /**
- * Event result set edildiğinde kullanıcılara bildirim gönderir
+ * Event result set edildiğinde kullanıcılara bildirim gönderir.
  */
 class SendResultNotificationsListener
 {

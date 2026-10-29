@@ -2,16 +2,16 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
+use Carbon\Carbon;
 use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Http\RequestUtil;
 use HuseyinFiliz\Pickem\Api\Serializer\WeekSerializer;
-use HuseyinFiliz\Pickem\Week;
 use HuseyinFiliz\Pickem\Validator\WeekValidator;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str; // EKLENDİ
+use HuseyinFiliz\Pickem\Week;
+use Illuminate\Support\Arr; // EKLENDİ
+use Illuminate\Support\Str;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
-use Carbon\Carbon;
 
 class CreateWeekController extends AbstractCreateController
 {
@@ -32,7 +32,7 @@ class CreateWeekController extends AbstractCreateController
         $data = Arr::get($request->getParsedBody(), 'data.attributes', []);
 
         // --- YENİ MANTIK ---
-        
+
         // 1. Convert camelCase keys (seasonId) to snake_case (season_id)
         $attributes = [];
         foreach ($data as $key => $value) {

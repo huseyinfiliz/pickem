@@ -7,8 +7,8 @@ use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
 use HuseyinFiliz\Pickem\Api\Serializer\PickSerializer;
 use HuseyinFiliz\Pickem\Event;
-use HuseyinFiliz\Pickem\Pick;
 use HuseyinFiliz\Pickem\Job\RecalculateUserScoreJob;
+use HuseyinFiliz\Pickem\Pick;
 use Illuminate\Contracts\Bus\Dispatcher;
 use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Support\Arr;
@@ -44,15 +44,15 @@ class UpdatePickController extends AbstractShowController
     {
         $actor = RequestUtil::getActor($request);
         $id = Arr::get($request->getQueryParams(), 'id');
-        
+
         $pick = Pick::with('event')->findOrFail($id);
-        
+
         // 1. Önce Zaman Aşımı Kontrolü (Cutoff)
         // Policy'den önce burayı kontrol ediyoruz ki özel hata mesajımız dönsün.
         if (!$pick->event->canPick()) {
             // GÜNCELLENDİ: Özel 'cutoff_passed' yerine genel 'invalid_outcome' kullanıyoruz.
             throw new ValidationException([
-                'message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome')
+                'message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome'),
             ]);
         }
 
@@ -63,21 +63,21 @@ class UpdatePickController extends AbstractShowController
         $selectedOutcome = Arr::get($data, 'selectedOutcome');
 
         if (!$selectedOutcome) {
-             return $pick;
+            return $pick;
         }
 
         // Beraberlik kontrolü
         if ($selectedOutcome === Event::RESULT_DRAW && !$pick->event->allow_draw) {
             throw new ValidationException([
-                'message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome')
+                'message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome'),
             ]);
         }
-        
+
         // Geçerli sonuç tipi kontrolü
         $validOutcomes = [Event::RESULT_HOME, Event::RESULT_AWAY, Event::RESULT_DRAW];
         if (!in_array($selectedOutcome, $validOutcomes)) {
             throw new ValidationException([
-                'message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome')
+                'message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome'),
             ]);
         }
 
@@ -85,7 +85,7 @@ class UpdatePickController extends AbstractShowController
 
         if ($pick->selected_outcome !== $selectedOutcome) {
             $pick->selected_outcome = $selectedOutcome;
-            $pick->is_correct = null; 
+            $pick->is_correct = null;
 
             // Normalde canPick() kontrolü süresi geçmiş maçları engeller ama
             // yine de ekstra güvenlik olarak kalabilir.
@@ -93,7 +93,7 @@ class UpdatePickController extends AbstractShowController
                 $recalculateScore = true;
             }
         }
-        
+
         $pick->save();
 
         if ($recalculateScore) {

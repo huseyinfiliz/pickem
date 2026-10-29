@@ -7,8 +7,8 @@ use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
 use HuseyinFiliz\Pickem\Api\Serializer\PickSerializer;
 use HuseyinFiliz\Pickem\Event;
-use HuseyinFiliz\Pickem\Pick;
 use HuseyinFiliz\Pickem\Job\RecalculateUserScoreJob;
+use HuseyinFiliz\Pickem\Pick;
 use Illuminate\Contracts\Bus\Dispatcher;
 use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Support\Arr;
@@ -35,14 +35,14 @@ class CreatePickController extends AbstractCreateController
         $actor->assertCan('pickem.makePicks');
 
         $data = Arr::get($request->getParsedBody(), 'data.attributes', []);
-        
+
         $eventId = Arr::get($data, 'eventId');
         $selectedOutcome = Arr::get($data, 'selectedOutcome');
 
         // Eksik veri kontrolü
         if (!$eventId || !$selectedOutcome) {
             throw new ValidationException([
-                'message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome')
+                'message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome'),
             ]);
         }
 
@@ -52,14 +52,14 @@ class CreatePickController extends AbstractCreateController
         if (!$event->canPick()) {
             // GÜNCELLENDİ: Özel 'cutoff_passed' yerine genel 'invalid_outcome' kullanıyoruz.
             throw new ValidationException([
-                'message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome')
+                'message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome'),
             ]);
         }
 
         // Beraberlik kontrolü
         if ($selectedOutcome === Event::RESULT_DRAW && !$event->allow_draw) {
             throw new ValidationException([
-                'message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome')
+                'message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome'),
             ]);
         }
 
@@ -67,25 +67,25 @@ class CreatePickController extends AbstractCreateController
         $validOutcomes = [Event::RESULT_HOME, Event::RESULT_AWAY, Event::RESULT_DRAW];
         if (!in_array($selectedOutcome, $validOutcomes)) {
             throw new ValidationException([
-                'message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome')
+                'message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome'),
             ]);
         }
 
         $pick = Pick::firstOrNew([
-            'user_id' => $actor->id,
+            'user_id'  => $actor->id,
             'event_id' => $eventId,
         ]);
 
         $isUpdate = $pick->exists;
-        $recalculateScore = false; 
+        $recalculateScore = false;
 
         $pick->selected_outcome = $selectedOutcome;
 
         if ($isUpdate && $pick->isDirty('selected_outcome')) {
             $pick->is_correct = null;
-            
+
             if ($event->isFinished() || $event->isClosed()) {
-                 $recalculateScore = true;
+                $recalculateScore = true;
             }
         }
 

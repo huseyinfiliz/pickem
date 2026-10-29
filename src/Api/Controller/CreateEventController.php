@@ -2,6 +2,7 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
+use Carbon\Carbon;
 use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Http\RequestUtil;
 use HuseyinFiliz\Pickem\Api\Serializer\EventSerializer;
@@ -11,7 +12,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
-use Carbon\Carbon;
 
 class CreateEventController extends AbstractCreateController
 {

@@ -36,10 +36,10 @@ class EventResultBlueprint implements BlueprintInterface
         $translator = resolve('translator');
 
         return [
-            'eventId' => $this->event->id,
-            'homeTeam' => $this->event->homeTeam ? $this->event->homeTeam->name : $translator->trans('huseyinfiliz-pickem.lib.common.home'),
-            'awayTeam' => $this->event->awayTeam ? $this->event->awayTeam->name : $translator->trans('huseyinfiliz-pickem.lib.common.away'),
-            'result' => $this->event->result,
+            'eventId'   => $this->event->id,
+            'homeTeam'  => $this->event->homeTeam ? $this->event->homeTeam->name : $translator->trans('huseyinfiliz-pickem.lib.common.home'),
+            'awayTeam'  => $this->event->awayTeam ? $this->event->awayTeam->name : $translator->trans('huseyinfiliz-pickem.lib.common.away'),
+            'result'    => $this->event->result,
             'homeScore' => $this->event->home_score,
             'awayScore' => $this->event->away_score,
         ];

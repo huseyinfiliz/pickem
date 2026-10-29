@@ -16,7 +16,7 @@ class ListLeaderboardController extends AbstractListController
     public $serializer = UserScoreSerializer::class;
 
     public $include = ['user'];
-    
+
     public $limit = 20;
 
     protected $url;
@@ -30,10 +30,10 @@ class ListLeaderboardController extends AbstractListController
     {
         $actor = RequestUtil::getActor($request);
         $actor->assertCan('pickem.view');
-        
+
         $query = UserScore::query();
         $query->whereNull('season_id');
-        
+
         $filters = $this->extractFilter($request);
         $filterUser = Arr::get($filters, 'user');
 
@@ -43,7 +43,7 @@ class ListLeaderboardController extends AbstractListController
 
         $query->orderBy('total_points', 'desc')
               ->orderBy('correct_picks', 'desc');
-        
+
         $query->with(['user']);
 
         $limit = $this->extractLimit($request);
@@ -71,7 +71,7 @@ class ListLeaderboardController extends AbstractListController
             $limit,
             $total
         );
-        
+
         $document->setMeta(['total' => $total]);
 
         return $results;

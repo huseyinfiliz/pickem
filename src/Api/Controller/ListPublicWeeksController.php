@@ -12,9 +12,9 @@ use Tobscure\JsonApi\Document;
 class ListPublicWeeksController extends AbstractListController
 {
     public $serializer = WeekSerializer::class;
-    
+
     // Public olduğu için 'season' ilişkisini dahil etmeye gerek yok
-    // public $include = ['season']; 
+    // public $include = ['season'];
 
     protected function data(ServerRequestInterface $request, Document $document)
     {

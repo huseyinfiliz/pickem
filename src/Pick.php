@@ -7,14 +7,14 @@ use Flarum\Database\ScopeVisibilityTrait;
 use Flarum\User\User;
 
 /**
- * @property int $id
- * @property int $user_id
- * @property int $event_id
- * @property string $selected_outcome
- * @property bool|null $is_correct
+ * @property int            $id
+ * @property int            $user_id
+ * @property int            $event_id
+ * @property string         $selected_outcome
+ * @property bool|null      $is_correct
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * * @property-read User $user
+ *                                            * @property-read User $user
  * @property-read Event $event
  */
 class Pick extends AbstractModel
@@ -27,10 +27,10 @@ class Pick extends AbstractModel
     protected $table = 'pickem_picks';
 
     protected $fillable = [
-        'user_id', 
-        'event_id', 
-        'selected_outcome', 
-        'is_correct'
+        'user_id',
+        'event_id',
+        'selected_outcome',
+        'is_correct',
     ];
 
     protected $casts = [
@@ -40,7 +40,7 @@ class Pick extends AbstractModel
     ];
 
     /**
-     * Relationships
+     * Relationships.
      */
     public function user()
     {
@@ -53,7 +53,7 @@ class Pick extends AbstractModel
     }
 
     /**
-     * Query Scopes
+     * Query Scopes.
      */
     public function scopeForUser($query, int $userId)
     {
@@ -81,7 +81,7 @@ class Pick extends AbstractModel
     }
 
     /**
-     * Helper Methods
+     * Helper Methods.
      */
     public function isCorrect(): bool
     {
@@ -104,20 +104,20 @@ class Pick extends AbstractModel
     }
 
     /**
-     * Get the outcome display name
+     * Get the outcome display name.
      */
     public function getOutcomeDisplayName(): string
     {
-        return match($this->selected_outcome) {
+        return match ($this->selected_outcome) {
             Event::RESULT_HOME => $this->event?->homeTeam?->name ?? 'Home',
             Event::RESULT_AWAY => $this->event?->awayTeam?->name ?? 'Away',
             Event::RESULT_DRAW => 'Draw',
-            default => 'Unknown',
+            default            => 'Unknown',
         };
     }
 
     /**
-     * Check if pick can be changed
+     * Check if pick can be changed.
      */
     public function canBeChanged(): bool
     {
@@ -125,7 +125,7 @@ class Pick extends AbstractModel
     }
 
     /**
-     * Check if pick can be deleted
+     * Check if pick can be deleted.
      */
     public function canBeDeleted(): bool
     {

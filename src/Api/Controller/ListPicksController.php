@@ -16,7 +16,7 @@ class ListPicksController extends AbstractListController
 {
     public $serializer = PickSerializer::class;
     public $include = ['event', 'event.homeTeam', 'event.awayTeam', 'event.week', 'user'];
-    
+
     public $limit = 20;
     public $sort = ['createdAt' => 'desc'];
     public $sortFields = ['createdAt', 'updatedAt'];
@@ -73,7 +73,7 @@ class ListPicksController extends AbstractListController
             $limit,
             $total
         );
-        
+
         $document->setMeta(['total' => $total]);
 
         return $results;

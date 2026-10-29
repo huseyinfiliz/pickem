@@ -22,7 +22,7 @@ class SeasonValidator extends AbstractValidator
                 Rule::unique('pickem_seasons', 'slug')->ignore($id),
             ],
             'startDate' => ['nullable', 'date'],
-            'endDate' => ['nullable', 'date', 'after_or_equal:startDate'],
+            'endDate'   => ['nullable', 'date', 'after_or_equal:startDate'],
         ];
     }
 

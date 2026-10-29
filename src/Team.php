@@ -8,13 +8,12 @@ use Flarum\Settings\SettingsRepositoryInterface; // URL oluşturmak için eklend
 use Illuminate\Support\Str; // URL kontrolü için eklendi
 
 /**
- * @property int $id
- * @property string $name
- * @property string $slug
- * @property string|null $logo_path
+ * @property int            $id
+ * @property string         $name
+ * @property string         $slug
+ * @property string|null    $logo_path
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- *
  * @property-read string|null $logo_url
  */
 class Team extends AbstractModel
@@ -34,7 +33,7 @@ class Team extends AbstractModel
     ];
 
     /**
-     * Get home events for this team
+     * Get home events for this team.
      */
     public function homeEvents()
     {
@@ -42,7 +41,7 @@ class Team extends AbstractModel
     }
 
     /**
-     * Get away events for this team
+     * Get away events for this team.
      */
     public function awayEvents()
     {
@@ -51,7 +50,7 @@ class Team extends AbstractModel
 
     /**
      * YENİ: Logo URL'si için Accessor.
-     * Bu metot, logo_path'in tam bir URL mi yoksa göreceli bir yol mu 
+     * Bu metot, logo_path'in tam bir URL mi yoksa göreceli bir yol mu
      * olduğunu kontrol ederek doğru URL'yi döndürür.
      */
     public function getLogoUrlAttribute(): ?string
@@ -70,7 +69,7 @@ class Team extends AbstractModel
         // Flarum'un temel URL'si ile birleştir.
         // Flarum 1.8+ için Ayarlar deposunu (SettingsRepository) kullanmak standart yoldur.
         $baseUrl = resolve(SettingsRepositoryInterface::class)->get('base_url');
-        
-        return rtrim($baseUrl, '/') . '/' . ltrim($this->logo_path, '/');
+
+        return rtrim($baseUrl, '/').'/'.ltrim($this->logo_path, '/');
     }
 }

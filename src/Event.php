@@ -7,17 +7,17 @@ use Flarum\Database\AbstractModel;
 use Flarum\Database\ScopeVisibilityTrait;
 
 /**
- * @property int $id
- * @property int|null $week_id
- * @property int $home_team_id
- * @property int $away_team_id
+ * @property int            $id
+ * @property int|null       $week_id
+ * @property int            $home_team_id
+ * @property int            $away_team_id
  * @property \Carbon\Carbon $match_date
  * @property \Carbon\Carbon $cutoff_date
- * @property bool $allow_draw
- * @property string $status
- * @property int|null $home_score
- * @property int|null $away_score
- * @property string|null $result
+ * @property bool           $allow_draw
+ * @property string         $status
+ * @property int|null       $home_score
+ * @property int|null       $away_score
+ * @property string|null    $result
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read Week|null $week
@@ -34,26 +34,26 @@ class Event extends AbstractModel
     protected $table = 'pickem_events';
 
     protected $fillable = [
-        'week_id', 
-        'home_team_id', 
+        'week_id',
+        'home_team_id',
         'away_team_id',
-        'match_date', 
-        'cutoff_date', 
+        'match_date',
+        'cutoff_date',
         'allow_draw',
-        'status', 
-        'home_score', 
-        'away_score', 
-        'result'
+        'status',
+        'home_score',
+        'away_score',
+        'result',
     ];
 
     protected $casts = [
-        'match_date' => 'datetime',
+        'match_date'  => 'datetime',
         'cutoff_date' => 'datetime',
-        'allow_draw' => 'boolean',
-        'home_score' => 'integer',
-        'away_score' => 'integer',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
+        'allow_draw'  => 'boolean',
+        'home_score'  => 'integer',
+        'away_score'  => 'integer',
+        'created_at'  => 'datetime',
+        'updated_at'  => 'datetime',
     ];
 
     // Status constants
@@ -68,26 +68,26 @@ class Event extends AbstractModel
 
     /**
      * Boot the model - register event listeners
-     * Modern Flarum 1.8 way using booted() instead of boot()
+     * Modern Flarum 1.8 way using booted() instead of boot().
      */
     protected static function booted()
     {
         // Auto-calculate result when scores are set
         static::saving(function (Event $event) {
             // Skorlar set edildiyse result'ı hesapla
-            if ($event->isDirty(['home_score', 'away_score']) && 
-                $event->home_score !== null && 
+            if ($event->isDirty(['home_score', 'away_score']) &&
+                $event->home_score !== null &&
                 $event->away_score !== null) {
                 $event->result = $event->calculateResult();
-                
+
                 // Otomatik olarak finished'a çek
                 if ($event->result !== null && $event->status === self::STATUS_SCHEDULED) {
                     $event->status = self::STATUS_FINISHED;
                 }
             }
-            
+
             // Cutoff geçtiyse otomatik kapat
-            if ($event->status === self::STATUS_SCHEDULED && 
+            if ($event->status === self::STATUS_SCHEDULED &&
                 Carbon::now()->isAfter($event->cutoff_date)) {
                 $event->status = self::STATUS_CLOSED;
             }
@@ -95,7 +95,7 @@ class Event extends AbstractModel
     }
 
     /**
-     * Relationships
+     * Relationships.
      */
     public function week()
     {
@@ -118,7 +118,7 @@ class Event extends AbstractModel
     }
 
     /**
-     * Query Scopes
+     * Query Scopes.
      */
     public function scopeScheduled($query)
     {
@@ -149,11 +149,11 @@ class Event extends AbstractModel
     }
 
     /**
-     * Helper Methods
+     * Helper Methods.
      */
     public function canPick(): bool
     {
-        return $this->status === self::STATUS_SCHEDULED && 
+        return $this->status === self::STATUS_SCHEDULED &&
                Carbon::now()->isBefore($this->cutoff_date);
     }
 
@@ -183,7 +183,7 @@ class Event extends AbstractModel
     }
 
     /**
-     * Calculate the result based on scores
+     * Calculate the result based on scores.
      */
     public function calculateResult(): ?string
     {
@@ -201,7 +201,7 @@ class Event extends AbstractModel
     }
 
     /**
-     * Get pick for specific user
+     * Get pick for specific user.
      */
     public function getPickForUser(int $userId): ?Pick
     {
@@ -209,7 +209,7 @@ class Event extends AbstractModel
     }
 
     /**
-     * Check if user has made a pick for this event
+     * Check if user has made a pick for this event.
      */
     public function hasPickFromUser(int $userId): bool
     {

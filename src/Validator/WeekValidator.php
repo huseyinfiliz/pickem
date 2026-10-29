@@ -12,11 +12,11 @@ class WeekValidator extends AbstractValidator
         $required = $this->model ? 'sometimes' : 'required';
 
         return [
-            'name' => [$required, 'string', 'max:100'],
+            'name'     => [$required, 'string', 'max:100'],
             'seasonId' => [
                 'nullable', // Sezonsuz haftalara izin ver
                 'integer',
-                Rule::exists('pickem_seasons', 'id') // Ama ID varsa, 'seasons' tablosunda var olmalı
+                Rule::exists('pickem_seasons', 'id'), // Ama ID varsa, 'seasons' tablosunda var olmalı
             ],
             'weekNumber' => ['nullable', 'integer'],
         ];

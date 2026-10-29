@@ -31,12 +31,12 @@ class CreateTeamController extends AbstractCreateController
         $data = Arr::get($request->getParsedBody(), 'data.attributes', []);
 
         // --- YENİ MANTIK ---
-        
+
         // 1. Specific logic: Auto-generate slug if empty
         if (empty($data['slug'])) {
             $data['slug'] = Str::slug(Arr::get($data, 'name'));
         }
-        
+
         // 2. Convert camelCase keys (logoPath) to snake_case (logo_path)
         $attributes = [];
         foreach ($data as $key => $value) {

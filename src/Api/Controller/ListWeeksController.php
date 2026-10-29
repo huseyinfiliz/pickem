@@ -22,7 +22,7 @@ class ListWeeksController extends AbstractListController
         $actor->assertCan('pickem.manage');
 
         $query = Week::query();
-        
+
         // DÜZELTME: Sezon ilişkisini peşin yükle
         $query->with('season');
 

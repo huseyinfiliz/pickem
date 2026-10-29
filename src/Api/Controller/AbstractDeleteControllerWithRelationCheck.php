@@ -55,7 +55,7 @@ abstract class AbstractDeleteControllerWithRelationCheck extends AbstractDeleteC
 
         $id = $request->getQueryParams()['id'];
         $modelClass = $this->getModelClass();
-        
+
         /** @var Model $model */
         $model = $modelClass::findOrFail($id);
 
@@ -63,7 +63,7 @@ abstract class AbstractDeleteControllerWithRelationCheck extends AbstractDeleteC
 
         if ($model->{$relationName}()->exists()) {
             throw new ValidationException([
-                'message' => $this->translator->trans($this->getErrorMessageKey())
+                'message' => $this->translator->trans($this->getErrorMessageKey()),
             ]);
         }
 

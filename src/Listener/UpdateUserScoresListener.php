@@ -3,10 +3,10 @@
 namespace HuseyinFiliz\Pickem\Listener;
 
 use HuseyinFiliz\Pickem\Event;
-use HuseyinFiliz\Pickem\PickemScoringService;
-use HuseyinFiliz\Pickem\Job\ProcessEventResultsJob; // EKLENDİ (Yeni Job'umuz)
-use Illuminate\Database\Eloquent\Events\Saved;
-use Illuminate\Contracts\Bus\Dispatcher; // EKLENDİ (Kuyruk için)
+use HuseyinFiliz\Pickem\Job\ProcessEventResultsJob;
+use HuseyinFiliz\Pickem\PickemScoringService; // EKLENDİ (Yeni Job'umuz)
+use Illuminate\Contracts\Bus\Dispatcher;
+use Illuminate\Database\Eloquent\Events\Saved; // EKLENDİ (Kuyruk için)
 
 class UpdateUserScoresListener
 {
@@ -34,7 +34,7 @@ class UpdateUserScoresListener
         if ($eventModel->result === null) {
             return;
         }
-        
+
         // ---- AĞIR İŞİ ÇAĞIRMAK YERİNE ----
         // $this->scoringService->updateScoresForEvent($eventModel);
 
