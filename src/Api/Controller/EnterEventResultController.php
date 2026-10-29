@@ -2,11 +2,11 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
-use Flarum\Http\RequestUtil;
 use Flarum\Foundation\ValidationException;
-use Illuminate\Contracts\Translation\Translator;
+use Flarum\Http\RequestUtil;
 use HuseyinFiliz\Pickem\Api\Resource\EventResource;
 use HuseyinFiliz\Pickem\Event;
+use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -35,7 +35,7 @@ class EnterEventResultController extends AbstractShowController
         // 1. Skor Doğrulama
         if ($homeScore === null || $awayScore === null) {
             throw new ValidationException([
-                'scores' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.scores_required')
+                'scores' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.scores_required'),
             ]);
         }
 

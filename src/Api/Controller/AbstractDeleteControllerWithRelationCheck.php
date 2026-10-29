@@ -53,7 +53,7 @@ abstract class AbstractDeleteControllerWithRelationCheck extends AbstractDeleteC
 
         if ($model->{$relationName}()->exists()) {
             throw new ValidationException([
-                'message' => $this->translator->trans($this->getErrorMessageKey())
+                'message' => $this->translator->trans($this->getErrorMessageKey()),
             ]);
         }
 

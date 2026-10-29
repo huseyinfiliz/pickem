@@ -2,8 +2,8 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
-use Flarum\Http\UrlGenerator;
 use Flarum\Http\RequestUtil;
+use Flarum\Http\UrlGenerator;
 use HuseyinFiliz\Pickem\Api\Resource\EventResource;
 use HuseyinFiliz\Pickem\Event;
 use Illuminate\Support\Arr;

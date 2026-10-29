@@ -8,6 +8,7 @@ use Illuminate\Validation\Rule;
 class TeamValidator extends AbstractValidator
 {
     public ?\Illuminate\Database\Eloquent\Model $model = null;
+
     protected function getRules(): array
     {
         $id = $this->model ? $this->model->id : null;

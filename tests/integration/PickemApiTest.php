@@ -27,10 +27,10 @@ class PickemApiTest extends TestCase
                 ['id' => 2, 'name' => 'Away', 'slug' => 'away'],
             ],
             Event::class => [[
-                'id' => 1, 'home_team_id' => 1, 'away_team_id' => 2,
-                'match_date' => Carbon::now()->addDays(2),
+                'id'          => 1, 'home_team_id' => 1, 'away_team_id' => 2,
+                'match_date'  => Carbon::now()->addDays(2),
                 'cutoff_date' => Carbon::now()->addDay(),
-                'allow_draw' => true,
+                'allow_draw'  => true,
             ]],
             'group_permission' => [
                 ['permission' => 'pickem.view', 'group_id' => 2],
@@ -43,7 +43,7 @@ class PickemApiTest extends TestCase
     {
         return $this->send($this->request($method, '/api'.$path, [
             'authenticatedAs' => $actor,
-            'json' => ['data' => ['attributes' => $attributes]],
+            'json'            => ['data' => ['attributes' => $attributes]],
         ]));
     }
 
@@ -90,7 +90,7 @@ class PickemApiTest extends TestCase
         $this->assertSame(403, $this->api('POST', '/pickem-teams', 2, ['name' => 'Denied'])->getStatusCode());
         $response = $this->api('POST', '/pickem-events', 1, [
             'homeTeamId' => 1, 'awayTeamId' => 1,
-            'matchDate' => Carbon::now()->addDays(2)->toIso8601String(),
+            'matchDate'  => Carbon::now()->addDays(2)->toIso8601String(),
             'cutoffDate' => Carbon::now()->addDay()->toIso8601String(),
         ]);
         $this->assertSame(422, $response->getStatusCode());

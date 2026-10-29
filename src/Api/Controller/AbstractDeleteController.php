@@ -14,6 +14,7 @@ abstract class AbstractDeleteController implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->delete($request);
+
         return new EmptyResponse(204);
     }
 }

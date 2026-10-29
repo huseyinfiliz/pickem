@@ -4,8 +4,8 @@ namespace HuseyinFiliz\Pickem\Api\Controller;
 
 use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
-use HuseyinFiliz\Pickem\Pick;
 use HuseyinFiliz\Pickem\Job\RecalculateUserScoreJob;
+use HuseyinFiliz\Pickem\Pick;
 use Illuminate\Contracts\Bus\Dispatcher;
 use Illuminate\Contracts\Translation\Translator; // Translator eklendi
 use Illuminate\Support\Arr;
@@ -27,7 +27,7 @@ class DeletePickController extends AbstractDeleteController
         // 1. Önce zaman aşımı kontrolü yap (Özel hata mesajı için)
         if (!$pick->event->canPick()) {
             throw new ValidationException([
-                'message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome')
+                'message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome'),
             ]);
         }
 

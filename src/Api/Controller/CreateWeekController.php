@@ -2,14 +2,14 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
+use Carbon\Carbon;
 use Flarum\Http\RequestUtil;
 use HuseyinFiliz\Pickem\Api\Resource\WeekResource;
-use HuseyinFiliz\Pickem\Week;
 use HuseyinFiliz\Pickem\Validator\WeekValidator;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str; // EKLENDİ
+use HuseyinFiliz\Pickem\Week;
+use Illuminate\Support\Arr; // EKLENDİ
+use Illuminate\Support\Str;
 use Psr\Http\Message\ServerRequestInterface;
-use Carbon\Carbon;
 
 class CreateWeekController extends AbstractCreateController
 {

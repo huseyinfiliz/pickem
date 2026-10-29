@@ -8,12 +8,12 @@ use Flarum\User\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * @property int $id
- * @property int $user_id
- * @property int|null $season_id
- * @property int $total_points
- * @property int $total_picks
- * @property int $correct_picks
+ * @property int            $id
+ * @property int            $user_id
+ * @property int|null       $season_id
+ * @property int            $total_points
+ * @property int            $total_picks
+ * @property int            $correct_picks
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read User $user
@@ -31,6 +31,7 @@ class UserScore extends AbstractModel
     /**
      * N+1 sorununu çözmek için runtime sırasında hesaplanan sıralamayı tutar.
      * Veritabanında böyle bir kolon yoktur.
+     *
      * @var int|null
      */
     public $calculatedRank = null;
@@ -44,15 +45,15 @@ class UserScore extends AbstractModel
     ];
 
     protected $casts = [
-        'total_points' => 'integer',
-        'total_picks' => 'integer',
+        'total_points'  => 'integer',
+        'total_picks'   => 'integer',
         'correct_picks' => 'integer',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
+        'created_at'    => 'datetime',
+        'updated_at'    => 'datetime',
     ];
 
     /**
-     * Relationships
+     * Relationships.
      */
     public function user()
     {
@@ -65,7 +66,7 @@ class UserScore extends AbstractModel
     }
 
     /**
-     * Query Scopes
+     * Query Scopes.
      */
     public function scopeForUser($query, int $userId)
     {
@@ -86,7 +87,7 @@ class UserScore extends AbstractModel
     }
 
     /**
-     * Helper Methods
+     * Helper Methods.
      */
     public function getIncorrectPicks(): int
     {
@@ -98,6 +99,7 @@ class UserScore extends AbstractModel
         if ($this->total_picks > 0) {
             return round(($this->correct_picks / $this->total_picks) * 100, 2);
         }
+
         return 0;
     }
 
@@ -108,7 +110,7 @@ class UserScore extends AbstractModel
 
     /**
      * YENİ: Kullanıcının sıralamasını hesaplar.
-     * Mantık: Benden yüksek puanı olanlar + (Puanı eşit olup daha çok doğrusu olanlar) + 1
+     * Mantık: Benden yüksek puanı olanlar + (Puanı eşit olup daha çok doğrusu olanlar) + 1.
      */
     public function calculateRank(): int
     {

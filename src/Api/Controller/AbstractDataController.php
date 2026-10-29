@@ -39,7 +39,7 @@ abstract class AbstractDataController implements RequestHandlerInterface
         [$primary, $included] = $serializer->serialize();
 
         return new JsonApiResponse(array_merge([
-            'data' => $isList ? $primary : ($primary[0] ?? null),
+            'data'     => $isList ? $primary : ($primary[0] ?? null),
             'included' => $included,
         ], $document->toArray()), $this instanceof AbstractCreateController ? 201 : 200);
     }

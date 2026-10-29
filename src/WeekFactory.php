@@ -10,13 +10,13 @@ class WeekFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->word,
-            'season_id' => null,
+            'name'        => $this->faker->word,
+            'season_id'   => null,
             'week_number' => null,
-            'start_date' => null,
-            'end_date' => null,
-            'created_at' => Carbon::now(),
-            'updated_at' => null,
+            'start_date'  => null,
+            'end_date'    => null,
+            'created_at'  => Carbon::now(),
+            'updated_at'  => null,
         ];
     }
 }

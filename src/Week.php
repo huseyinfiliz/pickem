@@ -7,14 +7,14 @@ use Flarum\Database\ScopeVisibilityTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * @property int $id
- * @property string $name
- * @property int|null $season_id
- * @property int|null $week_number
+ * @property int                 $id
+ * @property string              $name
+ * @property int|null            $season_id
+ * @property int|null            $week_number
  * @property \Carbon\Carbon|null $start_date
  * @property \Carbon\Carbon|null $end_date
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon      $created_at
+ * @property \Carbon\Carbon      $updated_at
  */
 class Week extends AbstractModel
 {
@@ -30,13 +30,13 @@ class Week extends AbstractModel
 
     protected $casts = [
         'start_date' => 'datetime',
-        'end_date' => 'datetime',
+        'end_date'   => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
 
     /**
-     * Get the season this week belongs to
+     * Get the season this week belongs to.
      */
     public function season()
     {
@@ -44,7 +44,7 @@ class Week extends AbstractModel
     }
 
     /**
-     * Get events in this week
+     * Get events in this week.
      */
     public function events()
     {

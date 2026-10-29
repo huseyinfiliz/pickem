@@ -10,13 +10,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str; // URL kontrolü için eklendi
 
 /**
- * @property int $id
- * @property string $name
- * @property string $slug
- * @property string|null $logo_path
+ * @property int            $id
+ * @property string         $name
+ * @property string         $slug
+ * @property string|null    $logo_path
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- *
  * @property-read string|null $logo_url
  */
 class Team extends AbstractModel
@@ -37,7 +36,7 @@ class Team extends AbstractModel
     ];
 
     /**
-     * Get home events for this team
+     * Get home events for this team.
      */
     public function homeEvents()
     {
@@ -45,7 +44,7 @@ class Team extends AbstractModel
     }
 
     /**
-     * Get away events for this team
+     * Get away events for this team.
      */
     public function awayEvents()
     {
@@ -74,6 +73,6 @@ class Team extends AbstractModel
         // Flarum 1.8+ için Ayarlar deposunu (SettingsRepository) kullanmak standart yoldur.
         $baseUrl = resolve(UrlGenerator::class)->to('forum')->base();
 
-        return rtrim($baseUrl, '/') . '/' . ltrim($this->logo_path, '/');
+        return rtrim($baseUrl, '/').'/'.ltrim($this->logo_path, '/');
     }
 }

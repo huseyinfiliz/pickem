@@ -15,5 +15,5 @@ return [
     },
     'down' => function (Builder $schema) {
         $schema->dropIfExists('pickem_teams');
-    }
+    },
 ];

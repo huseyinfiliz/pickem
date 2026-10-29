@@ -5,19 +5,19 @@ namespace HuseyinFiliz\Pickem;
 use Illuminate\Database\ConnectionInterface; // DÜZELTME: Facade yerine Interface
 
 /**
- * Skorlama mantığını merkezileştiren servis sınıfı
+ * Skorlama mantığını merkezileştiren servis sınıfı.
  */
 class PickemScoringService
 {
     /**
-     * Veritabanı bağlantısını enjekte ediyoruz
+     * Veritabanı bağlantısını enjekte ediyoruz.
      */
     public function __construct(protected ConnectionInterface $db)
     {
     }
 
     /**
-     * Bir maçın sonucu girildiğinde tüm tahminleri ve skorları günceller
+     * Bir maçın sonucu girildiğinde tüm tahminleri ve skorları günceller.
      */
     public function updateScoresForEvent(Event $event): void
     {
@@ -38,6 +38,7 @@ class PickemScoringService
         // Sonuç null ise (örn: iptal edildi veya geri alındı), is_correct null olmalı
         if ($event->result === null) {
             Pick::where('event_id', $event->id)->update(['is_correct' => null]);
+
             return;
         }
 
@@ -53,7 +54,7 @@ class PickemScoringService
     }
 
     /**
-     * Bu event için pick yapan kullanıcıların score'larını güncelle
+     * Bu event için pick yapan kullanıcıların score'larını güncelle.
      */
     protected function updateUserScoresForEvent(Event $event): void
     {
@@ -69,7 +70,7 @@ class PickemScoringService
     }
 
     /**
-     * Kullanıcının score'unu yeniden hesapla (Global Leaderboard - Sezon ID her zaman NULL)
+     * Kullanıcının score'unu yeniden hesapla (Global Leaderboard - Sezon ID her zaman NULL).
      */
     public function recalculateUserScore(int $userId): void
     {
@@ -79,8 +80,8 @@ class PickemScoringService
             ->whereNotNull('is_correct') // Sadece sonuçlanmış maçlar
             ->first();
 
-        $totalPicks = $stats ? (int)$stats->total : 0;
-        $correctPicks = $stats ? (int)$stats->correct : 0;
+        $totalPicks = $stats ? (int) $stats->total : 0;
+        $correctPicks = $stats ? (int) $stats->correct : 0;
 
         // Puanlama sistemi: Her doğru tahmin 1 puan
         $totalPoints = $correctPicks;
@@ -91,14 +92,14 @@ class PickemScoringService
         // 2. Skor kaydını güncelle veya oluştur (Sezon ID her zaman NULL)
         UserScore::updateOrCreate(
             [
-                'user_id' => $userId,
+                'user_id'   => $userId,
                 'season_id' => null,
             ],
             [
-                'total_points' => $totalPoints,
-                'total_picks' => $totalPicks,
+                'total_points'  => $totalPoints,
+                'total_picks'   => $totalPicks,
                 'correct_picks' => $correctPicks,
-                'accuracy' => $accuracy
+                'accuracy'      => $accuracy,
             ]
         );
     }

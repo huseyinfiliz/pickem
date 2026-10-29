@@ -3,8 +3,8 @@
 namespace HuseyinFiliz\Pickem\Job;
 
 use Flarum\Queue\AbstractJob;
-use HuseyinFiliz\Pickem\PickemScoringService; // Import the scoring service
-use Flarum\User\User;
+use Flarum\User\User; // Import the scoring service
+use HuseyinFiliz\Pickem\PickemScoringService;
 
 // Unused imports removed
 // use HuseyinFiliz\Pickem\Pick;

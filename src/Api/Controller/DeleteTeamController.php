@@ -5,9 +5,9 @@ namespace HuseyinFiliz\Pickem\Api\Controller;
 use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
 use HuseyinFiliz\Pickem\Team;
+use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
-use Illuminate\Contracts\Translation\Translator;
 
 class DeleteTeamController extends AbstractDeleteController
 {
@@ -26,7 +26,7 @@ class DeleteTeamController extends AbstractDeleteController
         if ($team->homeEvents()->exists() || $team->awayEvents()->exists()) {
             throw new ValidationException([
                 // GÜNCELLENDİ: lib.validation.errors.team_in_use -> lib.messages.in_use
-                'message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.in_use')
+                'message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.in_use'),
             ]);
         }
 

@@ -2,15 +2,16 @@
 
 namespace HuseyinFiliz\Pickem\Access;
 
-use Flarum\User\User;
 use Flarum\User\Access\AbstractPolicy;
+use Flarum\User\User;
 use HuseyinFiliz\Pickem\Event;
 
 class EventPolicy extends AbstractPolicy
 {
     /**
-     * @param User $actor
+     * @param User   $actor
      * @param string $ability
+     *
      * @return bool|void
      */
     public function can(User $actor, string $ability)
@@ -24,8 +25,10 @@ class EventPolicy extends AbstractPolicy
 
     /**
      * This will be called by the Serializer for each event.
+     *
      * * @param User $actor
      * @param Event $event
+     *
      * @return bool
      */
     public function view(User $actor, Event $event)

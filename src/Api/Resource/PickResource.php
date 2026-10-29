@@ -12,6 +12,7 @@ class PickResource extends AbstractDatabaseResource
     {
         return 'pickem-picks';
     }
+
     public function model(): string
     {
         return Pick::class;

@@ -2,11 +2,11 @@
 
 namespace HuseyinFiliz\Pickem\Job;
 
-use Flarum\Queue\AbstractJob;
 use Flarum\Notification\NotificationSyncer;
+use Flarum\Queue\AbstractJob;
 use HuseyinFiliz\Pickem\Event;
-use HuseyinFiliz\Pickem\Pick;
 use HuseyinFiliz\Pickem\Notification\EventResultBlueprint;
+use HuseyinFiliz\Pickem\Pick;
 use HuseyinFiliz\Pickem\PickemScoringService;
 
 class ProcessEventResultsJob extends AbstractJob

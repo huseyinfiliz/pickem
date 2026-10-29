@@ -8,6 +8,7 @@ use Illuminate\Validation\Rule;
 class SeasonValidator extends AbstractValidator
 {
     public ?\Illuminate\Database\Eloquent\Model $model = null;
+
     protected function getRules(): array
     {
         $id = $this->model ? $this->model->id : null;
@@ -23,7 +24,7 @@ class SeasonValidator extends AbstractValidator
                 Rule::unique('pickem_seasons', 'slug')->ignore($id),
             ],
             'startDate' => ['nullable', 'date'],
-            'endDate' => ['nullable', 'date', 'after_or_equal:startDate'],
+            'endDate'   => ['nullable', 'date', 'after_or_equal:startDate'],
         ];
     }
 

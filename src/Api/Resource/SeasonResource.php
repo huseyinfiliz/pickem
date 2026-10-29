@@ -12,6 +12,7 @@ class SeasonResource extends AbstractDatabaseResource
     {
         return 'pickem-seasons';
     }
+
     public function model(): string
     {
         return Season::class;

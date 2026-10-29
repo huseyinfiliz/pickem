@@ -12,6 +12,7 @@ class UserScoreResource extends AbstractDatabaseResource
     {
         return 'pickem-user-scores';
     }
+
     public function model(): string
     {
         return UserScore::class;
