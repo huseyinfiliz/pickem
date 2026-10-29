@@ -12,6 +12,7 @@ return (new Config())
         'blank_line_after_opening_tag' => false,
         'new_with_parentheses' => false,
         'multiline_whitespace_before_semicolons' => ['strategy' => 'no_multi_line'],
+        'increment_style' => ['style' => 'post'],
         'not_operator_with_successor_space' => true,
         'phpdoc_align' => false,
         'phpdoc_order' => false,

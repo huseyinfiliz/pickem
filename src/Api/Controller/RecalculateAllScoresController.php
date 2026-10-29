@@ -33,7 +33,7 @@ class RecalculateAllScoresController implements RequestHandlerInterface
             ->chunk(100, function ($picks) use (&$totalJobs) {
                 foreach ($picks as $pick) {
                     $this->bus->dispatch(new RecalculateUserScoreJob($pick->user_id));
-                    ++$totalJobs;
+                    $totalJobs++;
                 }
             });
 
