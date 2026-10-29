@@ -11,6 +11,7 @@ return (new Config())
         '@Symfony' => true,
         'blank_line_after_opening_tag' => false,
         'new_with_parentheses' => false,
+        'multiline_whitespace_before_semicolons' => ['strategy' => 'no_multi_line'],
         'not_operator_with_successor_space' => true,
         'phpdoc_align' => false,
         'phpdoc_order' => false,
@@ -23,6 +24,5 @@ return (new Config())
         (new Finder())
             ->in([__DIR__.'/src', __DIR__.'/tests', __DIR__.'/migrations'])
             ->exclude('tmp')
-            ->append([__DIR__.'/extend.php'])
-    )
-;
+            ->append([__DIR__.'/extend.php', __FILE__])
+    );
