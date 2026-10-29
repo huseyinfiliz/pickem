@@ -13,7 +13,7 @@
   "support": {
     "issues": "https://github.com/huseyinfiliz/pickem/issues",
     "source": "https://github.com/huseyinfiliz/pickem",
-    "forum": "https://discuss.flarum.org/d/your-discussion-id"
+    "forum": "https://discuss.flarum.org/d/38433-pickem-match-prediction-extension"
   },
   "homepage": "https://github.com/huseyinfiliz/pickem",
   "funding": [
@@ -24,7 +24,7 @@
   ],
   "require": {
     "php": "^8.3",
-    "flarum/core": "^2.0.0"
+    "flarum/core": "^2.0.2"
   },
   "authors": [
     {
@@ -90,7 +90,7 @@
     ]
   },
   "scripts-descriptions": {
-    "test": "Run unit tests",
+    "test": "Run API integration tests",
     "test:coverage": "Run tests with code coverage",
     "analyse": "Run static analysis with PHPStan",
     "analyse:clear": "Clear PHPStan cache",

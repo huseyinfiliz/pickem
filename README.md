@@ -21,7 +21,7 @@ A comprehensive sports prediction game extension for [Flarum](https://flarum.org
 
 ## Compatibility
 
-The `2.x` branch requires **Flarum 2.0+** and **PHP 8.3+** and is tested against Flarum **2.0.2**.
+The `2.x` branch requires **Flarum 2.0.2+** and **PHP 8.3+** and is tested against Flarum **2.0.2**.
 Flarum 1.x releases are maintained separately on the `1.x` branch.
 
 When upgrading a forum from Flarum 1 to Flarum 2, keep the existing Pick'em database tables;
