@@ -31,6 +31,7 @@ class UserScore extends AbstractModel
     /**
      * N+1 sorununu çözmek için runtime sırasında hesaplanan sıralamayı tutar.
      * Veritabanında böyle bir kolon yoktur.
+     *
      * @var int|null
      */
     public $calculatedRank;
