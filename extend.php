@@ -2,14 +2,14 @@
 
 namespace HuseyinFiliz\Pickem;
 
-use Flarum\Extend;
-use Flarum\User\User;
-use HuseyinFiliz\Pickem\Api\Controller;
 use Flarum\Api\Context;
 use Flarum\Api\Resource\ForumResource;
 use Flarum\Api\Schema;
+use Flarum\Extend;
+use Flarum\User\User;
 use HuseyinFiliz\Pickem\Access\EventPolicy;
 use HuseyinFiliz\Pickem\Access\PickPolicy;
+use HuseyinFiliz\Pickem\Api\Controller;
 
 return [
     // Frontend Assets

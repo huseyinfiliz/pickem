@@ -48,7 +48,7 @@ class PickemApiTest extends TestCase
     }
 
     #[Test]
-    public function events_serialize_teams_and_paginate(): void
+    public function eventsSerializeTeamsAndPaginate(): void
     {
         $response = $this->api('GET', '/pickem-events?page[limit]=1');
         $this->assertSame(200, $response->getStatusCode());
@@ -60,7 +60,7 @@ class PickemApiTest extends TestCase
     }
 
     #[Test]
-    public function member_can_pick_and_list_nested_includes(): void
+    public function memberCanPickAndListNestedIncludes(): void
     {
         $response = $this->api('POST', '/pickem-picks', 2, ['eventId' => 1, 'selectedOutcome' => 'home']);
         $this->assertSame(201, $response->getStatusCode(), (string) $response->getBody());
@@ -73,7 +73,7 @@ class PickemApiTest extends TestCase
     }
 
     #[Test]
-    public function results_score_picks_and_send_notifications(): void
+    public function resultsScorePicksAndSendNotifications(): void
     {
         $this->api('POST', '/pickem-picks', 2, ['eventId' => 1, 'selectedOutcome' => 'home']);
         $response = $this->api('POST', '/pickem-events/1/result', 1, ['homeScore' => 2, 'awayScore' => 1]);
@@ -85,7 +85,7 @@ class PickemApiTest extends TestCase
     }
 
     #[Test]
-    public function members_cannot_manage_and_invalid_matches_are_rejected(): void
+    public function membersCannotManageAndInvalidMatchesAreRejected(): void
     {
         $this->assertSame(403, $this->api('POST', '/pickem-teams', 2, ['name' => 'Denied'])->getStatusCode());
         $response = $this->api('POST', '/pickem-events', 1, [
@@ -97,7 +97,7 @@ class PickemApiTest extends TestCase
     }
 
     #[Test]
-    public function partial_match_updates_preserve_validation_context(): void
+    public function partialMatchUpdatesPreserveValidationContext(): void
     {
         $response = $this->api('PATCH', '/pickem-events/1', 1, ['allowDraw' => false]);
         $this->assertSame(200, $response->getStatusCode(), (string) $response->getBody());
@@ -107,7 +107,7 @@ class PickemApiTest extends TestCase
     }
 
     #[Test]
-    public function recalculate_tool_and_deleting_matches_refresh_scores(): void
+    public function recalculateToolAndDeletingMatchesRefreshScores(): void
     {
         $this->api('POST', '/pickem-picks', 2, ['eventId' => 1, 'selectedOutcome' => 'home']);
         $this->api('POST', '/pickem-events/1/result', 1, ['homeScore' => 2, 'awayScore' => 1]);

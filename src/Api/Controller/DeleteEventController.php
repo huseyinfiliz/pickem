@@ -4,8 +4,8 @@ namespace HuseyinFiliz\Pickem\Api\Controller;
 
 use Flarum\Http\RequestUtil;
 use HuseyinFiliz\Pickem\Event;
-use HuseyinFiliz\Pickem\Pick;
 use HuseyinFiliz\Pickem\Job\RecalculateUserScoreJob;
+use HuseyinFiliz\Pickem\Pick;
 use Illuminate\Contracts\Bus\Dispatcher;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;

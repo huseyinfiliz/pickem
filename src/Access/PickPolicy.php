@@ -2,31 +2,27 @@
 
 namespace HuseyinFiliz\Pickem\Access;
 
-use Flarum\User\User;
 use Flarum\User\Access\AbstractPolicy;
+use Flarum\User\User;
 use HuseyinFiliz\Pickem\Pick;
 
 class PickPolicy extends AbstractPolicy
 {
     /**
-     * @param User $actor
-     * @param string $ability
      * @return bool|void
      */
     public function can(User $actor, string $ability)
     {
-        if ($actor->can('pickem.makePicks') && $ability === 'create') {
+        if ($actor->can('pickem.makePicks') && 'create' === $ability) {
             return true;
         }
 
-        if ($actor->can('pickem.makePicks') && $ability === 'view') {
+        if ($actor->can('pickem.makePicks') && 'view' === $ability) {
             return true;
         }
     }
 
     /**
-     * @param User $actor
-     * @param Pick $pick
      * @return bool
      */
     public function edit(User $actor, Pick $pick)
@@ -37,8 +33,6 @@ class PickPolicy extends AbstractPolicy
     }
 
     /**
-     * @param User $actor
-     * @param Pick $pick
      * @return bool
      */
     public function delete(User $actor, Pick $pick)
@@ -48,8 +42,6 @@ class PickPolicy extends AbstractPolicy
     }
 
     /**
-     * @param User $actor
-     * @param Pick $pick
      * @return bool
      */
     public function view(User $actor, Pick $pick)

@@ -5,19 +5,19 @@ namespace HuseyinFiliz\Pickem;
 use Illuminate\Database\ConnectionInterface; // DÜZELTME: Facade yerine Interface
 
 /**
- * Skorlama mantığını merkezileştiren servis sınıfı
+ * Skorlama mantığını merkezileştiren servis sınıfı.
  */
 class PickemScoringService
 {
     /**
-     * Veritabanı bağlantısını enjekte ediyoruz
+     * Veritabanı bağlantısını enjekte ediyoruz.
      */
     public function __construct(protected ConnectionInterface $db)
     {
     }
 
     /**
-     * Bir maçın sonucu girildiğinde tüm tahminleri ve skorları günceller
+     * Bir maçın sonucu girildiğinde tüm tahminleri ve skorları günceller.
      */
     public function updateScoresForEvent(Event $event): void
     {
@@ -36,8 +36,9 @@ class PickemScoringService
     protected function updatePicksForEvent(Event $event): void
     {
         // Sonuç null ise (örn: iptal edildi veya geri alındı), is_correct null olmalı
-        if ($event->result === null) {
+        if (null === $event->result) {
             Pick::where('event_id', $event->id)->update(['is_correct' => null]);
+
             return;
         }
 
@@ -53,7 +54,7 @@ class PickemScoringService
     }
 
     /**
-     * Bu event için pick yapan kullanıcıların score'larını güncelle
+     * Bu event için pick yapan kullanıcıların score'larını güncelle.
      */
     protected function updateUserScoresForEvent(Event $event): void
     {
@@ -69,18 +70,18 @@ class PickemScoringService
     }
 
     /**
-     * Kullanıcının score'unu yeniden hesapla (Global Leaderboard - Sezon ID her zaman NULL)
+     * Kullanıcının score'unu yeniden hesapla (Global Leaderboard - Sezon ID her zaman NULL).
      */
     public function recalculateUserScore(int $userId): void
     {
         // 1. İstatistikleri veritabanı seviyesinde hesapla (Daha performanslı)
         $stats = Pick::where('user_id', $userId)
-            ->selectRaw('count(*) as total, sum(case when is_correct = 1 then 1 else 0 end) as correct')
+            ->selectRaw('count(*) as total, sum(case when is_correct = ? then 1 else 0 end) as correct', [true])
             ->whereNotNull('is_correct') // Sadece sonuçlanmış maçlar
             ->first();
 
-        $totalPicks = $stats ? (int)$stats->total : 0;
-        $correctPicks = $stats ? (int)$stats->correct : 0;
+        $totalPicks = $stats ? (int) $stats->total : 0;
+        $correctPicks = $stats ? (int) $stats->correct : 0;
 
         // Puanlama sistemi: Her doğru tahmin 1 puan
         $totalPoints = $correctPicks;

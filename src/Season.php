@@ -35,7 +35,7 @@ class Season extends AbstractModel
     ];
 
     /**
-     * Get weeks in this season
+     * Get weeks in this season.
      */
     public function weeks()
     {
@@ -43,7 +43,7 @@ class Season extends AbstractModel
     }
 
     /**
-     * Get user scores for this season
+     * Get user scores for this season.
      */
     public function userScores()
     {

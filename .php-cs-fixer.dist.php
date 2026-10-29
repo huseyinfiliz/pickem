@@ -8,12 +8,21 @@ use PhpCsFixer\Finder;
 return (new Config())
     ->setRiskyAllowed(false)
     ->setRules([
-        '@PSR12' => true,
+        '@Symfony' => true,
+        'blank_line_after_opening_tag' => false,
+        'new_with_parentheses' => false,
+        'not_operator_with_successor_space' => true,
+        'phpdoc_align' => false,
+        'phpdoc_order' => false,
+        'phpdoc_separation' => false,
+        'phpdoc_types' => false,
+        'trailing_comma_in_multiline' => false,
         'no_unused_imports' => true,
     ])
     ->setFinder(
         (new Finder())
-            ->in([__DIR__.'/src', __DIR__.'/tests'])
+            ->in([__DIR__.'/src', __DIR__.'/tests', __DIR__.'/migrations'])
+            ->exclude('tmp')
             ->append([__DIR__.'/extend.php'])
     )
 ;

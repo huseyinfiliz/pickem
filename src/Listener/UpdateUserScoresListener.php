@@ -14,8 +14,8 @@ class UpdateUserScoresListener
 
     public function handle(Event $event): void
     {
-        if ($event->isFinished() && $event->result !== null &&
-            $event->wasChanged(['result', 'home_score', 'away_score', 'status'])) {
+        if ($event->isFinished() && null !== $event->result
+            && $event->wasChanged(['result', 'home_score', 'away_score', 'status'])) {
             $this->bus->dispatch(new ProcessEventResultsJob($event->id));
         }
     }

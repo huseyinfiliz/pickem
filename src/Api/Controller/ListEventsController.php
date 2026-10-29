@@ -2,8 +2,8 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
-use Flarum\Http\UrlGenerator;
 use Flarum\Http\RequestUtil;
+use Flarum\Http\UrlGenerator;
 use HuseyinFiliz\Pickem\Api\Resource\EventResource;
 use HuseyinFiliz\Pickem\Event;
 use Illuminate\Support\Arr;
@@ -36,9 +36,9 @@ class ListEventsController extends AbstractListController
             $query->where(function ($q) use ($weekIds) {
                 $ids = array_diff($weekIds, ['null']);
 
-                if (!empty($ids)) {
+                if (! empty($ids)) {
                     $q->whereIn('week_id', $ids);
-                } elseif (!in_array('null', $weekIds)) {
+                } elseif (! in_array('null', $weekIds)) {
                     $q->whereRaw('1=0');
                 }
 
@@ -62,9 +62,9 @@ class ListEventsController extends AbstractListController
         $sort = $this->extractSort($request);
         $sortOrder = 'desc';
 
-        if (is_array($sort) && !empty($sort)) {
+        if (is_array($sort) && ! empty($sort)) {
             $sortField = ltrim(key($sort), '-');
-            if ($sortField === 'matchDate') {
+            if ('matchDate' === $sortField) {
                 $sortOrder = $sort[key($sort)];
             }
         }

@@ -36,7 +36,7 @@ class Week extends AbstractModel
     ];
 
     /**
-     * Get the season this week belongs to
+     * Get the season this week belongs to.
      */
     public function season()
     {
@@ -44,7 +44,7 @@ class Week extends AbstractModel
     }
 
     /**
-     * Get events in this week
+     * Get events in this week.
      */
     public function events()
     {

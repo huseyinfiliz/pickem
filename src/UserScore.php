@@ -16,8 +16,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property int $correct_picks
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property-read User $user
- * @property-read Season|null $season
+ * @property User $user
+ * @property Season|null $season
  */
 class UserScore extends AbstractModel
 {
@@ -33,7 +33,7 @@ class UserScore extends AbstractModel
      * Veritabanında böyle bir kolon yoktur.
      * @var int|null
      */
-    public $calculatedRank = null;
+    public $calculatedRank;
 
     protected $fillable = [
         'user_id',
@@ -52,7 +52,7 @@ class UserScore extends AbstractModel
     ];
 
     /**
-     * Relationships
+     * Relationships.
      */
     public function user()
     {
@@ -65,7 +65,7 @@ class UserScore extends AbstractModel
     }
 
     /**
-     * Query Scopes
+     * Query Scopes.
      */
     public function scopeForUser($query, int $userId)
     {
@@ -86,7 +86,7 @@ class UserScore extends AbstractModel
     }
 
     /**
-     * Helper Methods
+     * Helper Methods.
      */
     public function getIncorrectPicks(): int
     {
@@ -98,6 +98,7 @@ class UserScore extends AbstractModel
         if ($this->total_picks > 0) {
             return round(($this->correct_picks / $this->total_picks) * 100, 2);
         }
+
         return 0;
     }
 
@@ -108,7 +109,7 @@ class UserScore extends AbstractModel
 
     /**
      * YENİ: Kullanıcının sıralamasını hesaplar.
-     * Mantık: Benden yüksek puanı olanlar + (Puanı eşit olup daha çok doğrusu olanlar) + 1
+     * Mantık: Benden yüksek puanı olanlar + (Puanı eşit olup daha çok doğrusu olanlar) + 1.
      */
     public function calculateRank(): int
     {

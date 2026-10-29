@@ -17,6 +17,7 @@ class Document
     {
         $link = function (int $start) use ($url, $params, $limit): string {
             $params['page'] = ['offset' => $start, 'limit' => $limit];
+
             return $url.'?'.http_build_query($params);
         };
         $this->links = ['first' => $link(0)];

@@ -15,8 +15,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property bool|null $is_correct
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * * @property-read User $user
- * @property-read Event $event
+ * * @property User $user
+ * @property Event $event
  */
 class Pick extends AbstractModel
 {
@@ -42,7 +42,7 @@ class Pick extends AbstractModel
     ];
 
     /**
-     * Relationships
+     * Relationships.
      */
     public function user()
     {
@@ -55,7 +55,7 @@ class Pick extends AbstractModel
     }
 
     /**
-     * Query Scopes
+     * Query Scopes.
      */
     public function scopeForUser($query, int $userId)
     {
@@ -83,34 +83,34 @@ class Pick extends AbstractModel
     }
 
     /**
-     * Helper Methods
+     * Helper Methods.
      */
     public function isCorrect(): bool
     {
-        return $this->is_correct === true;
+        return true === $this->is_correct;
     }
 
     public function isIncorrect(): bool
     {
-        return $this->is_correct === false;
+        return false === $this->is_correct;
     }
 
     public function isPending(): bool
     {
-        return $this->is_correct === null;
+        return null === $this->is_correct;
     }
 
     public function hasResult(): bool
     {
-        return $this->is_correct !== null;
+        return null !== $this->is_correct;
     }
 
     /**
-     * Get the outcome display name
+     * Get the outcome display name.
      */
     public function getOutcomeDisplayName(): string
     {
-        return match($this->selected_outcome) {
+        return match ($this->selected_outcome) {
             Event::RESULT_HOME => $this->event?->homeTeam?->name ?? 'Home',
             Event::RESULT_AWAY => $this->event?->awayTeam?->name ?? 'Away',
             Event::RESULT_DRAW => 'Draw',
@@ -119,7 +119,7 @@ class Pick extends AbstractModel
     }
 
     /**
-     * Check if pick can be changed
+     * Check if pick can be changed.
      */
     public function canBeChanged(): bool
     {
@@ -127,7 +127,7 @@ class Pick extends AbstractModel
     }
 
     /**
-     * Check if pick can be deleted
+     * Check if pick can be deleted.
      */
     public function canBeDeleted(): bool
     {

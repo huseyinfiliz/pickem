@@ -52,7 +52,7 @@ class ListLeaderboardController extends AbstractListController
 
         // N+1 Çözümü: Eğer belirli bir kullanıcı filtrelenmiyorsa (Genel Liste),
         // sıralamayı veritabanı yerine burada hesapla.
-        if (!$filterUser) {
+        if (! $filterUser) {
             $startRank = $offset + 1;
             $results->each(function ($score, $index) use ($startRank) {
                 $score->calculatedRank = $startRank + $index;

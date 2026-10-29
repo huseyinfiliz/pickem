@@ -3,8 +3,8 @@
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
 use Flarum\Http\RequestUtil;
-use HuseyinFiliz\Pickem\Pick;
 use HuseyinFiliz\Pickem\Job\RecalculateUserScoreJob;
+use HuseyinFiliz\Pickem\Pick;
 use Illuminate\Contracts\Bus\Dispatcher as BusDispatcher;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -33,14 +33,14 @@ class RecalculateAllScoresController implements RequestHandlerInterface
             ->chunk(100, function ($picks) use (&$totalJobs) {
                 foreach ($picks as $pick) {
                     $this->bus->dispatch(new RecalculateUserScoreJob($pick->user_id));
-                    $totalJobs++;
+                    ++$totalJobs;
                 }
             });
 
         return new JsonResponse([
             'status' => 'dispatched',
             'jobCount' => $totalJobs,
-            'message' => $totalJobs . ' users queued for recalculation.'
+            'message' => $totalJobs.' users queued for recalculation.'
         ]);
     }
 }

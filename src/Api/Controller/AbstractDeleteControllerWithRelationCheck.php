@@ -16,28 +16,19 @@ abstract class AbstractDeleteControllerWithRelationCheck extends AbstractDeleteC
 
     /**
      * The Eloquent model class name.
-     *
-     * @return string
      */
     abstract protected function getModelClass(): string;
 
     /**
      * The name of the Eloquent relation to check for existence.
-     *
-     * @return string
      */
     abstract protected function getRelationName(): string;
 
     /**
      * The translation key for the validation error message.
-     *
-     * @return string
      */
     abstract protected function getErrorMessageKey(): string;
 
-    /**
-     * {@inheritdoc}
-     */
     protected function delete(ServerRequestInterface $request): void
     {
         $actor = RequestUtil::getActor($request);
@@ -52,9 +43,7 @@ abstract class AbstractDeleteControllerWithRelationCheck extends AbstractDeleteC
         $relationName = $this->getRelationName();
 
         if ($model->{$relationName}()->exists()) {
-            throw new ValidationException([
-                'message' => $this->translator->trans($this->getErrorMessageKey())
-            ]);
+            throw new ValidationException(['message' => $this->translator->trans($this->getErrorMessageKey())]);
         }
 
         $model->delete();

@@ -12,6 +12,7 @@ class EventResource extends AbstractDatabaseResource
     {
         return 'pickem-events';
     }
+
     public function model(): string
     {
         return Event::class;

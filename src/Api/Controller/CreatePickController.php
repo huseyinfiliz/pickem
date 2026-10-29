@@ -6,8 +6,8 @@ use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
 use HuseyinFiliz\Pickem\Api\Resource\PickResource;
 use HuseyinFiliz\Pickem\Event;
-use HuseyinFiliz\Pickem\Pick;
 use HuseyinFiliz\Pickem\Job\RecalculateUserScoreJob;
+use HuseyinFiliz\Pickem\Pick;
 use Illuminate\Contracts\Bus\Dispatcher;
 use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Support\Arr;
@@ -33,35 +33,27 @@ class CreatePickController extends AbstractCreateController
         $selectedOutcome = Arr::get($data, 'selectedOutcome');
 
         // Eksik veri kontrolü
-        if (!$eventId || !$selectedOutcome) {
-            throw new ValidationException([
-                'message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome')
-            ]);
+        if (! $eventId || ! $selectedOutcome) {
+            throw new ValidationException(['message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome')]);
         }
 
         $event = Event::with(['homeTeam', 'awayTeam', 'week'])->findOrFail($eventId);
 
         // Süre kontrolü (Cutoff)
-        if (!$event->canPick()) {
+        if (! $event->canPick()) {
             // GÜNCELLENDİ: Özel 'cutoff_passed' yerine genel 'invalid_outcome' kullanıyoruz.
-            throw new ValidationException([
-                'message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome')
-            ]);
+            throw new ValidationException(['message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome')]);
         }
 
         // Beraberlik kontrolü
-        if ($selectedOutcome === Event::RESULT_DRAW && !$event->allow_draw) {
-            throw new ValidationException([
-                'message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome')
-            ]);
+        if (Event::RESULT_DRAW === $selectedOutcome && ! $event->allow_draw) {
+            throw new ValidationException(['message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome')]);
         }
 
         // Geçerli sonuç tipi kontrolü (home, away, draw)
         $validOutcomes = [Event::RESULT_HOME, Event::RESULT_AWAY, Event::RESULT_DRAW];
-        if (!in_array($selectedOutcome, $validOutcomes)) {
-            throw new ValidationException([
-                'message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome')
-            ]);
+        if (! in_array($selectedOutcome, $validOutcomes)) {
+            throw new ValidationException(['message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome')]);
         }
 
         $pick = Pick::firstOrNew([

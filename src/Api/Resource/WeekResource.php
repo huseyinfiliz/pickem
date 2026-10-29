@@ -12,6 +12,7 @@ class WeekResource extends AbstractDatabaseResource
     {
         return 'pickem-weeks';
     }
+
     public function model(): string
     {
         return Week::class;

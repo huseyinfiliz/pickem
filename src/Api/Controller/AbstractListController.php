@@ -10,6 +10,7 @@ abstract class AbstractListController extends AbstractDataController
     protected function extractFilter(ServerRequestInterface $request): array
     {
         $filter = $request->getQueryParams()['filter'] ?? [];
+
         return is_array($filter) ? $filter : [];
     }
 
@@ -26,7 +27,7 @@ abstract class AbstractListController extends AbstractDataController
     protected function extractSort(ServerRequestInterface $request): array
     {
         $sort = $request->getQueryParams()['sort'] ?? null;
-        if (!is_string($sort)) {
+        if (! is_string($sort)) {
             return $this->sort ?? [];
         }
         $result = [];
@@ -36,6 +37,7 @@ abstract class AbstractListController extends AbstractDataController
                 $result[$name] = str_starts_with($field, '-') ? 'desc' : 'asc';
             }
         }
+
         return $result;
     }
 }

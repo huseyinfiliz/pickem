@@ -12,6 +12,7 @@ class TeamResource extends AbstractDatabaseResource
     {
         return 'pickem-teams';
     }
+
     public function model(): string
     {
         return Team::class;

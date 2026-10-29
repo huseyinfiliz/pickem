@@ -3,8 +3,8 @@
 namespace HuseyinFiliz\Pickem\Job;
 
 use Flarum\Queue\AbstractJob;
-use HuseyinFiliz\Pickem\PickemScoringService; // Import the scoring service
-use Flarum\User\User;
+use Flarum\User\User; // Import the scoring service
+use HuseyinFiliz\Pickem\PickemScoringService;
 
 // Unused imports removed
 // use HuseyinFiliz\Pickem\Pick;
@@ -22,12 +22,10 @@ class RecalculateUserScoreJob extends AbstractJob
     /**
      * Inject the service directly into the handle method.
      * Flarum's Queue system will automatically resolve this dependency.
-     *
-     * @param PickemScoringService $scoringService
      */
     public function handle(PickemScoringService $scoringService)
     {
-        if (User::find($this->userId) === null) {
+        if (null === User::find($this->userId)) {
             // If user doesn't exist, stop the job.
             return;
         }

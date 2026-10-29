@@ -2,6 +2,7 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
+use Carbon\Carbon;
 use Flarum\Http\RequestUtil;
 use HuseyinFiliz\Pickem\Api\Resource\EventResource;
 use HuseyinFiliz\Pickem\Event;
@@ -9,7 +10,6 @@ use HuseyinFiliz\Pickem\Validator\EventValidator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Psr\Http\Message\ServerRequestInterface;
-use Carbon\Carbon;
 
 class UpdateEventController extends AbstractShowController
 {
