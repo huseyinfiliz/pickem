@@ -5,6 +5,7 @@ namespace HuseyinFiliz\Pickem\Job;
 use Flarum\Queue\AbstractJob;
 use HuseyinFiliz\Pickem\PickemScoringService; // Import the scoring service
 use Flarum\User\User;
+
 // Unused imports removed
 // use HuseyinFiliz\Pickem\Pick;
 // use HuseyinFiliz\Pickem\UserScore;
@@ -14,14 +15,8 @@ use Flarum\User\User;
 
 class RecalculateUserScoreJob extends AbstractJob
 {
-    /**
-     * @var int
-     */
-    protected $userId;
-
-    public function __construct(int $userId)
+    public function __construct(protected int $userId)
     {
-        $this->userId = $userId;
     }
 
     /**

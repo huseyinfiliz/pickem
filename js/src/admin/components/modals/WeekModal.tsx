@@ -1,20 +1,22 @@
-import Modal from 'flarum/common/components/Modal';
+import Form from 'flarum/common/components/Form';
+import FormModal, { IFormModalAttrs } from 'flarum/common/components/FormModal';
+import type Mithril from 'mithril';
 import Button from 'flarum/common/components/Button';
 import Select from 'flarum/common/components/Select';
 import Week from '../../../common/models/Week';
 import Season from '../../../common/models/Season';
 
-interface IWeekModalAttrs {
+interface IWeekModalAttrs extends IFormModalAttrs {
   week?: Week | null;
   onsave: () => void;
 }
 
-export default class WeekModal extends Modal<IWeekModalAttrs> {
+export default class WeekModal extends FormModal<IWeekModalAttrs> {
   private week: Week | null | undefined;
   private name: string = '';
   private weekNumber: string | number = '';
-  private seasonId: string = '0'; 
-  private loading: boolean = false;
+  private seasonId: string = '0';
+  loading: boolean = false;
 
   oninit(vnode: any) {
     super.oninit(vnode);
@@ -22,7 +24,7 @@ export default class WeekModal extends Modal<IWeekModalAttrs> {
     if (this.week) {
       this.name = this.week.name() || '';
       this.weekNumber = this.week.weekNumber() || '';
-      this.seasonId = this.week.seasonId() || '0';
+      this.seasonId = String(this.week.seasonId() || '0');
     }
   }
 
@@ -30,40 +32,42 @@ export default class WeekModal extends Modal<IWeekModalAttrs> {
     return 'WeekModal Modal--small';
   }
 
-  title(): string {
+  title(): Mithril.Children {
     // GÜNCELLENDİ: resource değişkeni ve parametreler kaldırıldı
-    return this.week
-      ? app.translator.trans('huseyinfiliz-pickem.lib.actions.edit')
-      : app.translator.trans('huseyinfiliz-pickem.lib.actions.create');
+    return this.week ? app.translator.trans('huseyinfiliz-pickem.lib.actions.edit') : app.translator.trans('huseyinfiliz-pickem.lib.actions.create');
   }
 
   content() {
     const seasons = app.store.all('pickem-seasons') as Season[];
     const seasonOptions: Record<string, string> = seasons.reduce((options: Record<string, string>, season) => {
-      options[season.id()] = season.name();
+      options[season.id()!] = season.name();
       return options;
     }, {});
 
     return (
       <div className="Modal-body">
-        <div className="Form">
+        <Form>
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-pickem.lib.form.name')}</label>
             <input
               className="FormControl"
               type="text"
               value={this.name}
-              oninput={(e: InputEvent) => { this.name = (e.target as HTMLInputElement).value; }}
+              oninput={(e: InputEvent) => {
+                this.name = (e.target as HTMLInputElement).value;
+              }}
             />
           </div>
 
           <div className="Form-group">
-            {/* GÜNCELLENDİ: lib.form.season -> lib.common.season */}
+            {}
             <label>{app.translator.trans('huseyinfiliz-pickem.lib.common.season')}</label>
             <Select
               className="FormControl"
               value={this.seasonId}
-              onchange={(value: string) => { this.seasonId = value; }}
+              onchange={(value: string) => {
+                this.seasonId = value;
+              }}
               options={seasonOptions}
               default="0"
             >
@@ -77,20 +81,18 @@ export default class WeekModal extends Modal<IWeekModalAttrs> {
               className="FormControl"
               type="number"
               value={this.weekNumber}
-              oninput={(e: InputEvent) => { this.weekNumber = (e.target as HTMLInputElement).value; }}
+              oninput={(e: InputEvent) => {
+                this.weekNumber = (e.target as HTMLInputElement).value;
+              }}
             />
           </div>
 
           <div className="Form-group">
-            <Button
-              className="Button Button--primary"
-              type="submit"
-              loading={this.loading}
-            >
+            <Button className="Button Button--primary" type="submit" loading={this.loading}>
               {app.translator.trans('huseyinfiliz-pickem.lib.buttons.save')}
             </Button>
           </div>
-        </div>
+        </Form>
       </div>
     );
   }
@@ -105,9 +107,7 @@ export default class WeekModal extends Modal<IWeekModalAttrs> {
       seasonId: this.seasonId === '0' ? null : this.seasonId,
     };
     try {
-      const promise = this.week
-        ? this.week.save(data)
-        : app.store.createRecord('pickem-weeks').save(data);
+      const promise = this.week ? this.week.save(data) : app.store.createRecord('pickem-weeks').save(data);
 
       await promise;
       this.attrs.onsave();

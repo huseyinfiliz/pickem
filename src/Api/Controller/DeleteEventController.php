@@ -2,7 +2,6 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
-use Flarum\Api\Controller\AbstractDeleteController;
 use Flarum\Http\RequestUtil;
 use HuseyinFiliz\Pickem\Event;
 use HuseyinFiliz\Pickem\Pick;
@@ -13,20 +12,11 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class DeleteEventController extends AbstractDeleteController
 {
-    /**
-     * @var Dispatcher
-     */
-    protected $bus;
-
-    /**
-     * @param Dispatcher $bus
-     */
-    public function __construct(Dispatcher $bus)
+    public function __construct(protected Dispatcher $bus)
     {
-        $this->bus = $bus;
     }
 
-    protected function delete(ServerRequestInterface $request)
+    protected function delete(ServerRequestInterface $request): void
     {
         $actor = RequestUtil::getActor($request);
         $actor->assertCan('pickem.manage');
@@ -39,7 +29,10 @@ class DeleteEventController extends AbstractDeleteController
             ->pluck('user_id')
             ->all();
 
-        $event->delete();
+        $event->getConnection()->transaction(function () use ($event) {
+            $event->picks()->delete();
+            $event->delete();
+        });
 
         foreach ($affectedUserIds as $userId) {
             $this->bus->dispatch(

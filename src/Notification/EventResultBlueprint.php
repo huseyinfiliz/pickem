@@ -2,19 +2,17 @@
 
 namespace HuseyinFiliz\Pickem\Notification;
 
+use Flarum\Notification\AlertableInterface;
 use Flarum\Notification\Blueprint\BlueprintInterface;
 use HuseyinFiliz\Pickem\Event;
 
-class EventResultBlueprint implements BlueprintInterface
+class EventResultBlueprint implements BlueprintInterface, AlertableInterface
 {
-    public $event;
-
-    public function __construct(Event $event)
+    public function __construct(public Event $event)
     {
-        $this->event = $event;
     }
 
-    public function getSubject()
+    public function getSubject(): ?\Flarum\Database\AbstractModel
     {
         return $this->event;
     }
@@ -24,12 +22,12 @@ class EventResultBlueprint implements BlueprintInterface
         return null;
     }
 
-    public function getFromUser()
+    public function getFromUser(): ?\Flarum\User\User
     {
         return null;
     }
 
-    public function getData()
+    public function getData(): mixed
     {
         // GÜNCELLENDİ: Sabit 'Home'/'Away' yerine translator kullanımı.
         // Not: Bu metot email template'lerinde de kullanıldığı için burada çevirmek mantıklıdır.
@@ -45,12 +43,12 @@ class EventResultBlueprint implements BlueprintInterface
         ];
     }
 
-    public static function getType()
+    public static function getType(): string
     {
         return 'pickem_event_result';
     }
 
-    public static function getSubjectModel()
+    public static function getSubjectModel(): string
     {
         return Event::class;
     }

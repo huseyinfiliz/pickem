@@ -2,26 +2,21 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
-use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Http\RequestUtil;
-use HuseyinFiliz\Pickem\Api\Serializer\WeekSerializer;
+use HuseyinFiliz\Pickem\Api\Resource\WeekResource;
 use HuseyinFiliz\Pickem\Week;
 use HuseyinFiliz\Pickem\Validator\WeekValidator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str; // EKLENDİ
 use Psr\Http\Message\ServerRequestInterface;
-use Tobscure\JsonApi\Document;
 use Carbon\Carbon;
 
 class CreateWeekController extends AbstractCreateController
 {
-    public $serializer = WeekSerializer::class;
+    public $resource = WeekResource::class;
 
-    protected $validator;
-
-    public function __construct(WeekValidator $validator)
+    public function __construct(protected WeekValidator $validator)
     {
-        $this->validator = $validator;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)
@@ -32,7 +27,7 @@ class CreateWeekController extends AbstractCreateController
         $data = Arr::get($request->getParsedBody(), 'data.attributes', []);
 
         // --- YENİ MANTIK ---
-        
+
         // 1. Convert camelCase keys (seasonId) to snake_case (season_id)
         $attributes = [];
         foreach ($data as $key => $value) {
@@ -48,7 +43,7 @@ class CreateWeekController extends AbstractCreateController
         }
 
         // 3. Validate the converted attributes
-        $this->validator->assertValid($attributes);
+        $this->validator->assertValid($data);
 
         // 4. Create the model using the $fillable array in Week.php
         $week = Week::create($attributes);

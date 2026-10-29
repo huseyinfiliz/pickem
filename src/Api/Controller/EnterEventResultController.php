@@ -2,30 +2,21 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
-use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Http\RequestUtil;
 use Flarum\Foundation\ValidationException;
 use Illuminate\Contracts\Translation\Translator;
-use HuseyinFiliz\Pickem\Api\Serializer\EventSerializer;
+use HuseyinFiliz\Pickem\Api\Resource\EventResource;
 use HuseyinFiliz\Pickem\Event;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
-use Tobscure\JsonApi\Document;
-use Illuminate\Contracts\Bus\Dispatcher;
-use HuseyinFiliz\Pickem\Job\ProcessEventResultsJob;
 
 class EnterEventResultController extends AbstractShowController
 {
-    public $serializer = EventSerializer::class;
+    public $resource = EventResource::class;
     public $include = ['homeTeam', 'awayTeam', 'week'];
 
-    protected $translator;
-    protected $bus;
-
-    public function __construct(Translator $translator, Dispatcher $bus)
+    public function __construct(protected Translator $translator)
     {
-        $this->translator = $translator;
-        $this->bus = $bus;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)
@@ -61,10 +52,7 @@ class EnterEventResultController extends AbstractShowController
 
         $event->save();
 
-        // 4. Bildirim ve Puan Hesaplama İşini Kuyruğa At
-        $this->bus->dispatch(
-            new ProcessEventResultsJob($event->id)
-        );
+        // The Event saved listener queues scoring and notifications.
 
         // Güncel veriyi döndür
         $event->load(['homeTeam', 'awayTeam', 'week']);

@@ -2,10 +2,9 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
-use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
-use HuseyinFiliz\Pickem\Api\Serializer\PickSerializer;
+use HuseyinFiliz\Pickem\Api\Resource\PickResource;
 use HuseyinFiliz\Pickem\Event;
 use HuseyinFiliz\Pickem\Pick;
 use HuseyinFiliz\Pickem\Job\RecalculateUserScoreJob;
@@ -13,40 +12,23 @@ use Illuminate\Contracts\Bus\Dispatcher;
 use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
-use Tobscure\JsonApi\Document;
 
 class UpdatePickController extends AbstractShowController
 {
-    public $serializer = PickSerializer::class;
+    public $resource = PickResource::class;
     public $include = ['event', 'event.homeTeam', 'event.awayTeam', 'user'];
 
-    /**
-     * @var Dispatcher
-     */
-    protected $bus;
-
-    /**
-     * @var Translator
-     */
-    protected $translator;
-
-    /**
-     * @param Dispatcher $bus
-     * @param Translator $translator
-     */
-    public function __construct(Dispatcher $bus, Translator $translator)
+    public function __construct(protected Dispatcher $bus, protected Translator $translator)
     {
-        $this->bus = $bus;
-        $this->translator = $translator;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)
     {
         $actor = RequestUtil::getActor($request);
         $id = Arr::get($request->getQueryParams(), 'id');
-        
+
         $pick = Pick::with('event')->findOrFail($id);
-        
+
         // 1. Önce Zaman Aşımı Kontrolü (Cutoff)
         // Policy'den önce burayı kontrol ediyoruz ki özel hata mesajımız dönsün.
         if (!$pick->event->canPick()) {
@@ -63,7 +45,7 @@ class UpdatePickController extends AbstractShowController
         $selectedOutcome = Arr::get($data, 'selectedOutcome');
 
         if (!$selectedOutcome) {
-             return $pick;
+            return $pick;
         }
 
         // Beraberlik kontrolü
@@ -72,7 +54,7 @@ class UpdatePickController extends AbstractShowController
                 'message' => $this->translator->trans('huseyinfiliz-pickem.lib.messages.invalid_outcome')
             ]);
         }
-        
+
         // Geçerli sonuç tipi kontrolü
         $validOutcomes = [Event::RESULT_HOME, Event::RESULT_AWAY, Event::RESULT_DRAW];
         if (!in_array($selectedOutcome, $validOutcomes)) {
@@ -85,7 +67,7 @@ class UpdatePickController extends AbstractShowController
 
         if ($pick->selected_outcome !== $selectedOutcome) {
             $pick->selected_outcome = $selectedOutcome;
-            $pick->is_correct = null; 
+            $pick->is_correct = null;
 
             // Normalde canPick() kontrolü süresi geçmiş maçları engeller ama
             // yine de ekstra güvenlik olarak kalabilir.
@@ -93,7 +75,7 @@ class UpdatePickController extends AbstractShowController
                 $recalculateScore = true;
             }
         }
-        
+
         $pick->save();
 
         if ($recalculateScore) {

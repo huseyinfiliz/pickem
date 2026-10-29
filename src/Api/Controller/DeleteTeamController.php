@@ -2,7 +2,6 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
-use Flarum\Api\Controller\AbstractDeleteController;
 use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
 use HuseyinFiliz\Pickem\Team;
@@ -12,20 +11,11 @@ use Illuminate\Contracts\Translation\Translator;
 
 class DeleteTeamController extends AbstractDeleteController
 {
-    /**
-     * @var Translator
-     */
-    protected $translator;
-
-    /**
-     * @param Translator $translator
-     */
-    public function __construct(Translator $translator)
+    public function __construct(protected Translator $translator)
     {
-        $this->translator = $translator;
     }
 
-    protected function delete(ServerRequestInterface $request)
+    protected function delete(ServerRequestInterface $request): void
     {
         $actor = RequestUtil::getActor($request);
         $actor->assertCan('pickem.manage');

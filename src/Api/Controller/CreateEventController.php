@@ -2,27 +2,22 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
-use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Http\RequestUtil;
-use HuseyinFiliz\Pickem\Api\Serializer\EventSerializer;
+use HuseyinFiliz\Pickem\Api\Resource\EventResource;
 use HuseyinFiliz\Pickem\Event;
 use HuseyinFiliz\Pickem\Validator\EventValidator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Psr\Http\Message\ServerRequestInterface;
-use Tobscure\JsonApi\Document;
 use Carbon\Carbon;
 
 class CreateEventController extends AbstractCreateController
 {
-    public $serializer = EventSerializer::class;
+    public $resource = EventResource::class;
     public $include = ['homeTeam', 'awayTeam', 'week'];
 
-    protected $validator;
-
-    public function __construct(EventValidator $validator)
+    public function __construct(protected EventValidator $validator)
     {
-        $this->validator = $validator;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)
@@ -47,7 +42,7 @@ class CreateEventController extends AbstractCreateController
         $attributes['allow_draw'] = Arr::get($attributes, 'allow_draw', false);
         $attributes['status'] = Arr::get($attributes, 'status', 'scheduled');
 
-        $this->validator->assertValid($attributes);
+        $this->validator->assertValid($data);
 
         return Event::create($attributes);
     }

@@ -13,14 +13,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class RecalculateAllScoresController implements RequestHandlerInterface
 {
-    /**
-     * @var BusDispatcher
-     */
-    protected $bus;
-
-    public function __construct(BusDispatcher $bus)
+    public function __construct(protected BusDispatcher $bus)
     {
-        $this->bus = $bus;
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -28,20 +22,21 @@ class RecalculateAllScoresController implements RequestHandlerInterface
         $actor = RequestUtil::getActor($request);
         $actor->assertCan('pickem.manage');
 
-        // Chunking kullanarak belleği koruyoruz. 
+        // Chunking kullanarak belleği koruyoruz.
         // Her seferinde 100 kullanıcı ID'si çekip işliyoruz.
         $totalJobs = 0;
 
         Pick::query()
             ->distinct()
             ->select('user_id')
+            ->orderBy('user_id')
             ->chunk(100, function ($picks) use (&$totalJobs) {
                 foreach ($picks as $pick) {
                     $this->bus->dispatch(new RecalculateUserScoreJob($pick->user_id));
                     $totalJobs++;
                 }
             });
-        
+
         return new JsonResponse([
             'status' => 'dispatched',
             'jobCount' => $totalJobs,

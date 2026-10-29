@@ -2,25 +2,20 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
-use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Http\RequestUtil;
-use HuseyinFiliz\Pickem\Api\Serializer\TeamSerializer;
+use HuseyinFiliz\Pickem\Api\Resource\TeamResource;
 use HuseyinFiliz\Pickem\Team;
 use HuseyinFiliz\Pickem\Validator\TeamValidator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str; // EKLENDİ
 use Psr\Http\Message\ServerRequestInterface;
-use Tobscure\JsonApi\Document;
 
 class UpdateTeamController extends AbstractShowController
 {
-    public $serializer = TeamSerializer::class;
+    public $resource = TeamResource::class;
 
-    protected $validator;
-
-    public function __construct(TeamValidator $validator)
+    public function __construct(protected TeamValidator $validator)
     {
-        $this->validator = $validator;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)

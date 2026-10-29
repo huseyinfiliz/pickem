@@ -1,32 +1,35 @@
-import Modal from 'flarum/common/components/Modal';
+import Form from 'flarum/common/components/Form';
+import FormModal, { IFormModalAttrs } from 'flarum/common/components/FormModal';
+import type Mithril from 'mithril';
+import type { ApiPayloadSingle } from 'flarum/common/Store';
 import Button from 'flarum/common/components/Button';
 import PickemEvent from '../../../common/models/Event';
 import Team from '../../../common/models/Team';
 
-interface IResultModalAttrs {
+interface IResultModalAttrs extends IFormModalAttrs {
   event: PickemEvent;
   onsave: () => void;
 }
 
-export default class ResultModal extends Modal<IResultModalAttrs> {
-  private event: PickemEvent;
+export default class ResultModal extends FormModal<IResultModalAttrs> {
+  private event!: PickemEvent;
   private homeScore: string | number = '';
   private awayScore: string | number = '';
-  private loading: boolean = false;
+  loading: boolean = false;
 
   oninit(vnode: any) {
     super.oninit(vnode);
 
     this.event = this.attrs.event;
-    this.homeScore = this.event.homeScore() !== null ? this.event.homeScore() : '';
-    this.awayScore = this.event.awayScore() !== null ? this.event.awayScore() : '';
+    this.homeScore = this.event.homeScore() ?? '';
+    this.awayScore = this.event.awayScore() ?? '';
   }
 
   className(): string {
     return 'ResultModal Modal--small';
   }
 
-  title(): string {
+  title(): Mithril.Children {
     return app.translator.trans('huseyinfiliz-pickem.lib.actions.enter_result');
   }
 
@@ -34,7 +37,7 @@ export default class ResultModal extends Modal<IResultModalAttrs> {
     const homeTeam = this.event.homeTeam() as Team | null;
     const awayTeam = this.event.awayTeam() as Team | null;
 
-    let resultText = '';
+    let resultText: Mithril.Children = '';
     const home = Number(this.homeScore);
     const away = Number(this.awayScore);
 
@@ -46,14 +49,22 @@ export default class ResultModal extends Modal<IResultModalAttrs> {
 
     return (
       <div className="Modal-body">
-        <div className="Form">
-          
+        <Form>
           <div className="Form-group">
-            <div className="TeamCell" style={{marginBottom: '8px'}}>
-               {this.renderTeamLogo(homeTeam)}
-               <label style={{margin: 0}}>
-                 {homeTeam ? homeTeam.name() : app.translator.trans('huseyinfiliz-pickem.lib.form.home_team')}
-               </label>
+            <div
+              className="TeamCell"
+              style={{
+                marginBottom: '8px',
+              }}
+            >
+              {this.renderTeamLogo(homeTeam)}
+              <label
+                style={{
+                  margin: 0,
+                }}
+              >
+                {homeTeam ? homeTeam.name() : app.translator.trans('huseyinfiliz-pickem.lib.form.home_team')}
+              </label>
             </div>
             <input
               className="FormControl"
@@ -67,11 +78,20 @@ export default class ResultModal extends Modal<IResultModalAttrs> {
           </div>
 
           <div className="Form-group">
-            <div className="TeamCell" style={{marginBottom: '8px'}}>
-               {this.renderTeamLogo(awayTeam)}
-               <label style={{margin: 0}}>
-                 {awayTeam ? awayTeam.name() : app.translator.trans('huseyinfiliz-pickem.lib.form.away_team')}
-               </label>
+            <div
+              className="TeamCell"
+              style={{
+                marginBottom: '8px',
+              }}
+            >
+              {this.renderTeamLogo(awayTeam)}
+              <label
+                style={{
+                  margin: 0,
+                }}
+              >
+                {awayTeam ? awayTeam.name() : app.translator.trans('huseyinfiliz-pickem.lib.form.away_team')}
+              </label>
             </div>
             <input
               className="FormControl"
@@ -98,20 +118,24 @@ export default class ResultModal extends Modal<IResultModalAttrs> {
               {app.translator.trans('huseyinfiliz-pickem.lib.buttons.save')}
             </Button>
           </div>
-        </div>
+        </Form>
       </div>
     );
   }
 
   renderTeamLogo(team: Team | null) {
     if (!team) {
-      return <div className="TeamLogo TeamLogo--letter" style={{ backgroundColor: '#999' }}>?</div>;
+      return (
+        <div className="TeamLogo TeamLogo--letter" style={{ backgroundColor: '#999' }}>
+          ?
+        </div>
+      );
     }
 
     const logoUrl = team.logoUrl();
     const teamName = team.name();
     const firstLetter = teamName ? teamName.charAt(0).toUpperCase() : 'T';
-    
+
     const stringToColor = (str: string) => {
       let hash = 0;
       for (let i = 0; i < str.length; i++) {
@@ -120,19 +144,13 @@ export default class ResultModal extends Modal<IResultModalAttrs> {
       const hue = hash % 360;
       return `hsl(${hue}, 65%, 50%)`;
     };
-    
+
     if (logoUrl) {
-      return (
-        <img 
-          src={logoUrl} 
-          alt={teamName || 'Team'} 
-          className="TeamLogo TeamLogo--image" 
-        />
-      );
+      return <img src={logoUrl} alt={teamName || 'Team'} className="TeamLogo TeamLogo--image" />;
     }
 
     const backgroundColor = stringToColor(teamName || 'Team');
-    
+
     return (
       <div className="TeamLogo TeamLogo--letter" style={{ backgroundColor }}>
         {firstLetter}
@@ -146,7 +164,7 @@ export default class ResultModal extends Modal<IResultModalAttrs> {
     m.redraw();
 
     try {
-      const response = await app.request({
+      const response = await app.request<ApiPayloadSingle>({
         method: 'POST',
         url: `${app.forum.attribute('apiUrl')}/pickem-events/${this.event.id()}/result`,
         body: {
@@ -165,7 +183,6 @@ export default class ResultModal extends Modal<IResultModalAttrs> {
       app.alerts.show({ type: 'success' }, app.translator.trans('huseyinfiliz-pickem.lib.messages.result_saved'));
       this.attrs.onsave();
       this.hide();
-
     } catch (error: any) {
       this.loading = false;
       this.alertAttrs = error.alert;

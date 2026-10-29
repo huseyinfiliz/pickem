@@ -23,7 +23,8 @@
     }
   ],
   "require": {
-    "flarum/core": "^1.2.0"
+    "php": "^8.3",
+    "flarum/core": "^2.0.0"
   },
   "authors": [
     {
@@ -62,7 +63,7 @@
         "gitConf": true,
         "githubActions": true,
         "prettier": true,
-        "typescript": true, 
+        "typescript": true,
         "bundlewatch": false,
         "backendTesting": true,
         "editorConfig": true,
@@ -71,8 +72,9 @@
     }
   },
   "scripts": {
-    "test": "phpunit -c phpunit.xml",
-    "test:coverage": "phpunit -c phpunit.xml --coverage-html coverage",
+    "test": "phpunit -c tests/phpunit.integration.xml",
+    "test:setup": "@php tests/integration/setup.php",
+    "test:coverage": "phpunit -c tests/phpunit.integration.xml --coverage-html coverage",
     "analyse": "vendor/bin/phpstan analyse",
     "analyse:clear": "vendor/bin/phpstan clear-result-cache",
     "cs": "vendor/bin/php-cs-fixer fix --dry-run --diff",
@@ -106,8 +108,8 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require-dev": {
-    "flarum/phpstan": "*",
-    "flarum/testing": "^1.0",
+    "flarum/phpstan": "^2.0.0",
+    "flarum/testing": "^2.0.0",
     "friendsofphp/php-cs-fixer": "^3.64"
   }
 }

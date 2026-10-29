@@ -2,33 +2,28 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
-use Flarum\Api\Controller\AbstractListController;
 use Flarum\Http\UrlGenerator;
 use Flarum\Http\RequestUtil;
-use HuseyinFiliz\Pickem\Api\Serializer\EventSerializer;
+use HuseyinFiliz\Pickem\Api\Resource\EventResource;
 use HuseyinFiliz\Pickem\Event;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
-use Tobscure\JsonApi\Document;
 
 class ListEventsController extends AbstractListController
 {
-    public $serializer = EventSerializer::class;
+    public $resource = EventResource::class;
     public $include = ['homeTeam', 'awayTeam', 'week'];
-    
+
     public $sortFields = ['matchDate'];
 
-    protected $url;
-
-    public function __construct(UrlGenerator $url)
+    public function __construct(protected UrlGenerator $url)
     {
-        $this->url = $url;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)
     {
         $actor = RequestUtil::getActor($request);
-        $actor->assertCan('pickem.view'); 
+        $actor->assertCan('pickem.view');
 
         $query = Event::query();
         $query->with($this->include);
@@ -37,14 +32,13 @@ class ListEventsController extends AbstractListController
 
         if ($weekIdString = Arr::get($filters, 'week')) {
             $weekIds = explode(',', $weekIdString);
-            
+
             $query->where(function ($q) use ($weekIds) {
                 $ids = array_diff($weekIds, ['null']);
-                
+
                 if (!empty($ids)) {
                     $q->whereIn('week_id', $ids);
-                } 
-                elseif (!in_array('null', $weekIds)) {
+                } elseif (!in_array('null', $weekIds)) {
                     $q->whereRaw('1=0');
                 }
 
@@ -64,9 +58,9 @@ class ListEventsController extends AbstractListController
                       ->orWhere('away_team_id', $teamId);
             });
         }
-        
+
         $sort = $this->extractSort($request);
-        $sortOrder = 'desc'; 
+        $sortOrder = 'desc';
 
         if (is_array($sort) && !empty($sort)) {
             $sortField = ltrim(key($sort), '-');
@@ -74,16 +68,16 @@ class ListEventsController extends AbstractListController
                 $sortOrder = $sort[key($sort)];
             }
         }
-        
-        $query->orderBy('match_date', $sortOrder); 
-        
+
+        $query->orderBy('match_date', $sortOrder);
+
         $limit = $this->extractLimit($request);
         $offset = $this->extractOffset($request);
-        
+
         $total = $query->count();
-        
+
         $results = $query->limit($limit)->offset($offset)->get();
-        
+
         $document->addPaginationLinks(
             $this->url->to('api')->route('pickem.events.index'),
             $request->getQueryParams(),

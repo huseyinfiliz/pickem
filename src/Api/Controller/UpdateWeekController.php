@@ -2,25 +2,20 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
-use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Http\RequestUtil;
-use HuseyinFiliz\Pickem\Api\Serializer\WeekSerializer;
+use HuseyinFiliz\Pickem\Api\Resource\WeekResource;
 use HuseyinFiliz\Pickem\Week;
 use HuseyinFiliz\Pickem\Validator\WeekValidator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str; // EKLENDİ
 use Psr\Http\Message\ServerRequestInterface;
-use Tobscure\JsonApi\Document;
 
 class UpdateWeekController extends AbstractShowController
 {
-    public $serializer = WeekSerializer::class;
+    public $resource = WeekResource::class;
 
-    protected $validator;
-
-    public function __construct(WeekValidator $validator)
+    public function __construct(protected WeekValidator $validator)
     {
-        $this->validator = $validator;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)
@@ -42,7 +37,7 @@ class UpdateWeekController extends AbstractShowController
 
         // 2. Modeli ve veriyi doğrula
         $this->validator->model = $week;
-        $this->validator->assertValid($attributes);
+        $this->validator->assertValid($data);
 
         // 3. Modeli $fillable kullanarak doldur ve kaydet
         $week->fill($attributes);

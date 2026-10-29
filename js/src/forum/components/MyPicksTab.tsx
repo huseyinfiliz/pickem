@@ -4,10 +4,6 @@ import Pick from '../../common/models/Pick';
 import PickemEvent from '../../common/models/Event';
 import Team from '../../common/models/Team';
 
-declare global {
-  const dayjs: any;
-}
-
 interface MyPicksTabAttrs {
   picks: Record<string, Pick>;
   loading: boolean;
@@ -47,7 +43,7 @@ export default class MyPicksTab extends Component<MyPicksTabAttrs> {
       .sort((a, b) => {
         const eventA = a.event() as PickemEvent | false;
         const eventB = b.event() as PickemEvent | false;
-        
+
         if (!eventA || !eventB) return 0;
 
         const dateA = eventA.matchDate() ? new Date(eventA.matchDate()!).getTime() : 0;
@@ -85,23 +81,28 @@ export default class MyPicksTab extends Component<MyPicksTabAttrs> {
                 matchDate = dayjs(event.matchDate()).format('DD MMM YYYY');
               } catch {}
 
-              const firstTeamName = reverse 
-                ? (awayTeam ? awayTeam.name() : app.translator.trans('huseyinfiliz-pickem.lib.common.away'))
-                : (homeTeam ? homeTeam.name() : app.translator.trans('huseyinfiliz-pickem.lib.common.home'));
-              
-              const secondTeamName = reverse 
-                ? (homeTeam ? homeTeam.name() : app.translator.trans('huseyinfiliz-pickem.lib.common.home'))
-                : (awayTeam ? awayTeam.name() : app.translator.trans('huseyinfiliz-pickem.lib.common.away'));
+              const firstTeamName = reverse
+                ? awayTeam
+                  ? awayTeam.name()
+                  : app.translator.trans('huseyinfiliz-pickem.lib.common.away')
+                : homeTeam
+                  ? homeTeam.name()
+                  : app.translator.trans('huseyinfiliz-pickem.lib.common.home');
+
+              const secondTeamName = reverse
+                ? homeTeam
+                  ? homeTeam.name()
+                  : app.translator.trans('huseyinfiliz-pickem.lib.common.home')
+                : awayTeam
+                  ? awayTeam.name()
+                  : app.translator.trans('huseyinfiliz-pickem.lib.common.away');
 
               return (
                 <div key={String(pickId)} className={`PickemList-item ${itemClass}`}>
-                  
                   <div className="PickemList-cell type-match">
                     <span className="mobile-label">{app.translator.trans('huseyinfiliz-pickem.lib.common.match')}</span>
                     <span className="value">
-                        {firstTeamName}{' '}
-                        {app.translator.trans('huseyinfiliz-pickem.lib.common.vs')}{' '}
-                        {secondTeamName}
+                      {firstTeamName} {app.translator.trans('huseyinfiliz-pickem.lib.common.vs')} {secondTeamName}
                     </span>
                   </div>
 
@@ -138,7 +139,6 @@ export default class MyPicksTab extends Component<MyPicksTabAttrs> {
                       )}
                     </span>
                   </div>
-
                 </div>
               );
             })}
@@ -147,11 +147,7 @@ export default class MyPicksTab extends Component<MyPicksTabAttrs> {
 
         {hasMore && (
           <div className="LoadMore">
-            <Button
-              className="Button Button--primary"
-              onclick={onLoadMore}
-              loading={loading}
-            >
+            <Button className="Button Button--primary" onclick={onLoadMore} loading={loading}>
               {app.translator.trans('huseyinfiliz-pickem.lib.buttons.load_more')}
             </Button>
           </div>

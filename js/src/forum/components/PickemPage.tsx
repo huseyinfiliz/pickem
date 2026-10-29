@@ -1,24 +1,24 @@
+import IndexSidebar from 'flarum/forum/components/IndexSidebar';
+import type Mithril from 'mithril';
 import Page from 'flarum/common/components/Page';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import extractText from 'flarum/common/utils/extractText';
 import MatchesTab from './MatchesTab';
 import MyPicksTab from './MyPicksTab';
 import LeaderboardTab from './LeaderboardTab';
-import IndexPage from 'flarum/forum/components/IndexPage';
-import listItems from 'flarum/common/helpers/listItems';
 
 export default class PickemPage extends Page {
   private activeTab: string = 'matches';
   private loading: boolean = true;
-  
+
   private picks: Record<string, any> = {};
   private myPicksLoading: boolean = false;
   private myPicksHasMore: boolean = false;
-  
+
   private userScores: any[] = [];
   private leaderboardLoading: boolean = false;
   private leaderboardHasMore: boolean = false;
-  
+
   // YENİ: Kendi skorunu tutacak state
   private myScore: any = null;
 
@@ -28,7 +28,7 @@ export default class PickemPage extends Page {
     super.oninit(vnode);
 
     if (!app.forum.attribute('pickem.canView')) {
-      m.route.set('/'); 
+      m.route.set('/');
       return;
     }
 
@@ -41,7 +41,7 @@ export default class PickemPage extends Page {
     this.leaderboardLoading = false;
     this.leaderboardHasMore = false;
     this.myScore = null;
-    this.filterDataLoaded = false; 
+    this.filterDataLoaded = false;
 
     this.loadInitialData();
   }
@@ -60,17 +60,16 @@ export default class PickemPage extends Page {
         // YENİ: Eğer giriş yapmışsa kendi sıralamasını çek
         promises.push(this.loadMyRank());
       }
-      
+
       promises.push(this.loadLeaderboard(0));
       promises.push(this.loadFilterData());
 
       await Promise.all(promises);
-
     } catch (error) {
       console.error('Error loading initial data:', error);
     } finally {
       this.loading = false;
-      this.filterDataLoaded = true; 
+      this.filterDataLoaded = true;
       m.redraw();
     }
   }
@@ -78,12 +77,12 @@ export default class PickemPage extends Page {
   // YENİ: Kendi sıralamasını çeken fonksiyon
   async loadMyRank() {
     if (!app.session.user) return;
-    
+
     try {
       // ListLeaderboardController'a eklediğimiz 'user' filtresini kullanıyoruz
       const results = (await app.store.find('pickem-user-scores', {
         filter: { user: app.session.user.id() },
-        page: { limit: 1 }
+        page: { limit: 1 },
       })) as any[];
 
       if (results && results.length > 0) {
@@ -106,7 +105,7 @@ export default class PickemPage extends Page {
       const results = (await app.store.find('pickem-picks', {
         filter: { user: app.session.user.id() },
         include: 'event,event.homeTeam,event.awayTeam',
-        page: { offset, limit }
+        page: { offset, limit },
       })) as any[];
 
       if (results && Array.isArray(results)) {
@@ -138,11 +137,11 @@ export default class PickemPage extends Page {
     m.redraw();
     const limit = 20;
     try {
-      const results = (await app.store.find('pickem-user-scores', { 
+      const results = (await app.store.find('pickem-user-scores', {
         include: 'user',
-        page: { offset, limit } 
+        page: { offset, limit },
       })) as any[];
-      
+
       if (offset === 0) {
         this.userScores = results;
       } else {
@@ -159,11 +158,7 @@ export default class PickemPage extends Page {
 
   async loadFilterData() {
     try {
-      await Promise.all([
-        app.store.find('pickem-public-seasons'),
-        app.store.find('pickem-public-teams'),
-        app.store.find('pickem-public-weeks')
-      ]);
+      await Promise.all([app.store.find('pickem-public-seasons'), app.store.find('pickem-public-teams'), app.store.find('pickem-public-weeks')]);
     } catch (error) {
       console.error('Error loading filter data:', error);
     }
@@ -171,41 +166,32 @@ export default class PickemPage extends Page {
 
   view() {
     return (
-      <div className="IndexPage PickemPage"> 
+      <div className="IndexPage PickemPage">
         <header className="Hero PickemHero">
           <div className="container">
             <div className="containerNarrow">
               <h1 className="Hero-title">
-                <i className="icon fas fa-trophy" />{' '}
-                {app.translator.trans('huseyinfiliz-pickem.lib.nav.pickem')}
+                <i className="icon fas fa-trophy" /> {app.translator.trans('huseyinfiliz-pickem.lib.nav.pickem')}
               </h1>
             </div>
           </div>
         </header>
-        
+
         <div className="container">
           <div className="sideNavContainer">
-            <nav className="IndexPage-nav sideNav">
-              <ul>{listItems(IndexPage.prototype.sidebarItems().toArray())}</ul>
-            </nav>
+            <IndexSidebar />
             <div className="IndexPage-results sideNavOffset">
-              
               <div className="PickemPage-tabs">
                 {this.renderTab('matches', app.translator.trans('huseyinfiliz-pickem.lib.nav.matches'))}
-                
-                {app.session.user && app.forum.attribute('pickem.makePicks') &&
+
+                {app.session.user &&
+                  app.forum.attribute('pickem.makePicks') &&
                   this.renderTab('my_picks', app.translator.trans('huseyinfiliz-pickem.lib.nav.my_picks'))}
 
                 {this.renderTab('leaderboard', app.translator.trans('huseyinfiliz-pickem.lib.nav.leaderboard'))}
               </div>
 
-              {this.loading ? (
-                <LoadingIndicator />
-              ) : (
-                <div className="PickemPage-tabContent">
-                  {this.renderAllTabs()}
-                </div>
-              )}
+              {this.loading ? <LoadingIndicator /> : <div className="PickemPage-tabContent">{this.renderAllTabs()}</div>}
             </div>
           </div>
         </div>
@@ -213,12 +199,14 @@ export default class PickemPage extends Page {
     );
   }
 
-  renderTab(tabId: string, label: string) {
+  renderTab(tabId: string, label: Mithril.Children) {
     const active = this.activeTab === tabId;
     return (
       <button
         className={`Button Button--flat PickemPage-tab ${active ? 'active' : ''}`}
-        onclick={() => { this.activeTab = tabId; }}
+        onclick={() => {
+          this.activeTab = tabId;
+        }}
       >
         {label}
       </button>
@@ -232,27 +220,29 @@ export default class PickemPage extends Page {
           {this.filterDataLoaded && (
             <MatchesTab
               picks={this.picks}
-              onPickChange={(picks: Record<string, any>) => { this.picks = picks; }}
+              onPickChange={(picks: Record<string, any>) => {
+                this.picks = picks;
+              }}
             />
           )}
         </div>
-        
+
         {app.session.user && app.forum.attribute('pickem.makePicks') && (
           <div className={`PickemPage-tabPane ${this.activeTab === 'my_picks' ? 'active' : ''}`}>
-            <MyPicksTab 
-              picks={this.picks} 
+            <MyPicksTab
+              picks={this.picks}
               loading={this.myPicksLoading}
               hasMore={this.myPicksHasMore}
               onLoadMore={() => this.loadPicks(Object.keys(this.picks).length)}
             />
           </div>
         )}
-        
+
         <div className={`PickemPage-tabPane ${this.activeTab === 'leaderboard' ? 'active' : ''}`}>
-          <LeaderboardTab 
+          <LeaderboardTab
             userScores={this.userScores}
             // YENİ: myScore'u gönderiyoruz
-            myScore={this.myScore} 
+            myScore={this.myScore}
             hasMore={this.leaderboardHasMore}
             loading={this.leaderboardLoading}
             onLoadMore={() => this.loadLeaderboard(this.userScores.length)}

@@ -2,16 +2,14 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
-use Flarum\Api\Controller\AbstractListController;
 use Flarum\Http\RequestUtil;
-use HuseyinFiliz\Pickem\Api\Serializer\SeasonSerializer;
+use HuseyinFiliz\Pickem\Api\Resource\SeasonResource;
 use HuseyinFiliz\Pickem\Season;
 use Psr\Http\Message\ServerRequestInterface;
-use Tobscure\JsonApi\Document;
 
 class ListPublicSeasonsController extends AbstractListController
 {
-    public $serializer = SeasonSerializer::class;
+    public $resource = SeasonResource::class;
 
     protected function data(ServerRequestInterface $request, Document $document)
     {

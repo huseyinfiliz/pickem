@@ -4,9 +4,9 @@ namespace HuseyinFiliz\Pickem\Access;
 
 use Flarum\User\User;
 use Flarum\User\Access\AbstractPolicy;
-use HuseyinFiliz\Pickem\Pick; 
+use HuseyinFiliz\Pickem\Pick;
 
-class PickPolicy extends AbstractPolicy 
+class PickPolicy extends AbstractPolicy
 {
     /**
      * @param User $actor

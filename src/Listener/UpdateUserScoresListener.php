@@ -3,44 +3,20 @@
 namespace HuseyinFiliz\Pickem\Listener;
 
 use HuseyinFiliz\Pickem\Event;
-use HuseyinFiliz\Pickem\PickemScoringService;
-use HuseyinFiliz\Pickem\Job\ProcessEventResultsJob; // EKLENDİ (Yeni Job'umuz)
-use Illuminate\Database\Eloquent\Events\Saved;
-use Illuminate\Contracts\Bus\Dispatcher; // EKLENDİ (Kuyruk için)
+use HuseyinFiliz\Pickem\Job\ProcessEventResultsJob;
+use Illuminate\Contracts\Bus\Dispatcher;
 
 class UpdateUserScoresListener
 {
-    protected $scoringService; // Bu artık kullanılmayacak ama kalsa da olur
-    protected $bus; // EKLENDİ
-
-    public function __construct(PickemScoringService $scoringService, Dispatcher $bus) // Dispatcher eklendi
+    public function __construct(protected Dispatcher $bus)
     {
-        $this->scoringService = $scoringService;
-        $this->bus = $bus; // EKLENDİ
     }
 
-    public function handle(Saved $event)
+    public function handle(Event $event): void
     {
-        if (!($event->model instanceof Event)) {
-            return;
+        if ($event->isFinished() && $event->result !== null &&
+            $event->wasChanged(['result', 'home_score', 'away_score', 'status'])) {
+            $this->bus->dispatch(new ProcessEventResultsJob($event->id));
         }
-
-        $eventModel = $event->model;
-
-        if (!$eventModel->wasChanged(['result', 'home_score', 'away_score'])) {
-            return;
-        }
-
-        if ($eventModel->result === null) {
-            return;
-        }
-        
-        // ---- AĞIR İŞİ ÇAĞIRMAK YERİNE ----
-        // $this->scoringService->updateScoresForEvent($eventModel);
-
-        // ---- YENİ: İŞİ KUYRUĞA EKLE ----
-        $this->bus->dispatch(
-            new ProcessEventResultsJob($eventModel->id)
-        );
     }
 }

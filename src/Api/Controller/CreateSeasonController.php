@@ -2,26 +2,21 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
-use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Http\RequestUtil;
-use HuseyinFiliz\Pickem\Api\Serializer\SeasonSerializer;
+use HuseyinFiliz\Pickem\Api\Resource\SeasonResource;
 use HuseyinFiliz\Pickem\Season;
 use HuseyinFiliz\Pickem\Validator\SeasonValidator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Psr\Http\Message\ServerRequestInterface;
-use Tobscure\JsonApi\Document;
 use Carbon\Carbon;
 
 class CreateSeasonController extends AbstractCreateController
 {
-    public $serializer = SeasonSerializer::class;
+    public $resource = SeasonResource::class;
 
-    protected $validator;
-
-    public function __construct(SeasonValidator $validator)
+    public function __construct(protected SeasonValidator $validator)
     {
-        $this->validator = $validator;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)
@@ -53,7 +48,7 @@ class CreateSeasonController extends AbstractCreateController
         }
 
         // 4. Validate the converted attributes
-        $this->validator->assertValid($attributes);
+        $this->validator->assertValid($data);
 
         // 5. Create the model using the $fillable array in Season.php
         $season = Season::create($attributes);

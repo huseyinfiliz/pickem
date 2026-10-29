@@ -48,9 +48,13 @@ export default class EventCard extends Component<EventCardAttrs> {
 
     const firstTeam = reverse ? awayTeam : homeTeam;
     const secondTeam = reverse ? homeTeam : awayTeam;
-    const firstTeamLabel = reverse ? app.translator.trans('huseyinfiliz-pickem.lib.common.away') : app.translator.trans('huseyinfiliz-pickem.lib.common.home');
-    const secondTeamLabel = reverse ? app.translator.trans('huseyinfiliz-pickem.lib.common.home') : app.translator.trans('huseyinfiliz-pickem.lib.common.away');
-    
+    const firstTeamLabel = reverse
+      ? app.translator.trans('huseyinfiliz-pickem.lib.common.away')
+      : app.translator.trans('huseyinfiliz-pickem.lib.common.home');
+    const secondTeamLabel = reverse
+      ? app.translator.trans('huseyinfiliz-pickem.lib.common.home')
+      : app.translator.trans('huseyinfiliz-pickem.lib.common.away');
+
     const firstScore = reverse ? awayScore : homeScore;
     const secondScore = reverse ? homeScore : awayScore;
 
@@ -59,9 +63,7 @@ export default class EventCard extends Component<EventCardAttrs> {
 
     return (
       <div className="EventCard">
-        <div className={`EventCard-status ${status}`}>
-          {app.translator.trans(`huseyinfiliz-pickem.lib.status.${status}`)}
-        </div>
+        <div className={`EventCard-status ${status}`}>{app.translator.trans(`huseyinfiliz-pickem.lib.status.${status}`)}</div>
 
         <div className="EventCard-teams">
           <div className="team-container">
@@ -145,11 +147,12 @@ export default class EventCard extends Component<EventCardAttrs> {
 
         {pick && !canPick && (
           <div className="EventCard-pick-result">
-            {app.translator.trans('huseyinfiliz-pickem.forum.picks.your_pick')}: <strong>{this.formatResult(pick.selectedOutcome(), homeTeam, awayTeam)}</strong>
+            {app.translator.trans('huseyinfiliz-pickem.forum.picks.your_pick')}:{' '}
+            <strong>{this.formatResult(pick.selectedOutcome(), homeTeam, awayTeam)}</strong>
             {pick.isCorrect() !== null && (
               <span className={pick.isCorrect() ? 'correct' : 'incorrect'}>
-                {pick.isCorrect() 
-                  ? ` ✓ ${app.translator.trans('huseyinfiliz-pickem.lib.status.correct')}` 
+                {pick.isCorrect()
+                  ? ` ✓ ${app.translator.trans('huseyinfiliz-pickem.lib.status.correct')}`
                   : ` ✗ ${app.translator.trans('huseyinfiliz-pickem.lib.status.incorrect')}`}
               </span>
             )}
@@ -178,7 +181,7 @@ export default class EventCard extends Component<EventCardAttrs> {
         </div>
       );
     }
-    
+
     const nameStr = String(teamName);
     const initial = nameStr.charAt(0).toUpperCase();
     const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f39c12', '#9b59b6', '#1abc9c', '#e67e22', '#34495e'];

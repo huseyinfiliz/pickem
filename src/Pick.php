@@ -5,6 +5,7 @@ namespace HuseyinFiliz\Pickem;
 use Flarum\Database\AbstractModel;
 use Flarum\Database\ScopeVisibilityTrait;
 use Flarum\User\User;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property int $id
@@ -19,6 +20,7 @@ use Flarum\User\User;
  */
 class Pick extends AbstractModel
 {
+    use HasFactory;
     use ScopeVisibilityTrait;
 
     // YENİ EKLENDİ: Zaman damgalarını otomatik yönet
@@ -27,9 +29,9 @@ class Pick extends AbstractModel
     protected $table = 'pickem_picks';
 
     protected $fillable = [
-        'user_id', 
-        'event_id', 
-        'selected_outcome', 
+        'user_id',
+        'event_id',
+        'selected_outcome',
         'is_correct'
     ];
 

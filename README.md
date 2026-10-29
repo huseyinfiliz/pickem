@@ -19,6 +19,30 @@ A comprehensive sports prediction game extension for [Flarum](https://flarum.org
 ### ⚙️ Admin Management
 ![Admin Demo](https://i.ibb.co/1wf6mb4/image.png)
 
+## Compatibility
+
+The `2.x` branch requires **Flarum 2.0+** and **PHP 8.3+** and is tested against Flarum **2.0.2**.
+Flarum 1.x releases are maintained separately on the `1.x` branch.
+
+When upgrading a forum from Flarum 1 to Flarum 2, keep the existing Pick'em database tables;
+teams, seasons, weeks, matches, picks and scores use the same schema.
+Run `php flarum migrate` and `php flarum cache:clear` after updating.
+
+Result scoring and notifications use Flarum's queue. With the database queue enabled,
+keep the forum's queue worker running so results appear in the leaderboard.
+
+### Development checks
+
+```sh
+composer install
+composer test:setup
+composer test
+composer cs
+```
+
+The integration tests use a separate SQLite database by default.
+Build the frontend from `js/` with `yarn install`, `yarn build` and `yarn check-typings`.
+
 ## Features
 
 - 🎯 **Match Predictions**: Users can predict Home Win, Away Win, or Draw results

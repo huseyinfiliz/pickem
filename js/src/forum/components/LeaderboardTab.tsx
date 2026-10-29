@@ -1,6 +1,6 @@
 import Component from 'flarum/common/Component';
 import Button from 'flarum/common/components/Button';
-import avatar from 'flarum/common/helpers/avatar';
+import Avatar from 'flarum/common/components/Avatar';
 
 interface LeaderboardTabAttrs {
   userScores: any[];
@@ -17,11 +17,11 @@ export default class LeaderboardTab extends Component<LeaderboardTabAttrs> {
     const hasData = userScores && userScores.length > 0;
 
     if (!hasData && !loading) {
-       return (
-          <div className="LeaderboardTab">
-            <p>{app.translator.trans('huseyinfiliz-pickem.lib.messages.no_data')}</p>
-          </div>
-        );
+      return (
+        <div className="LeaderboardTab">
+          <p>{app.translator.trans('huseyinfiliz-pickem.lib.messages.no_data')}</p>
+        </div>
+      );
     }
 
     return (
@@ -30,16 +30,12 @@ export default class LeaderboardTab extends Component<LeaderboardTabAttrs> {
 
         <div className="Leaderboard">
           {userScores.length >= 3 && this.renderPodium(userScores.slice(0, 3))}
-          
+
           {this.renderList(userScores)}
 
           {hasMore && (
             <div className="LoadMore">
-              <Button
-                className="Button Button--primary"
-                loading={loading}
-                onclick={onLoadMore}
-              >
+              <Button className="Button Button--primary" loading={loading} onclick={onLoadMore}>
                 {app.translator.trans('huseyinfiliz-pickem.lib.buttons.load_more')}
               </Button>
             </div>
@@ -61,27 +57,27 @@ export default class LeaderboardTab extends Component<LeaderboardTabAttrs> {
       <div className="MyRankCard">
         <div className="MyRankCard-content">
           <div className="MyRankCard-user">
-             <div className="avatar">
-                {avatar(app.session.user, { className: 'Avatar' })}
-             </div>
-             <div className="info">
-                <span className="label">{app.translator.trans('huseyinfiliz-pickem.forum.picks.your_pick')}</span>
-                <span className="rank">#{rank}</span>
-             </div>
+            <div className="avatar">
+              <Avatar user={app.session.user} className="Avatar" />
+            </div>
+            <div className="info">
+              <span className="label">{app.translator.trans('huseyinfiliz-pickem.forum.picks.your_pick')}</span>
+              <span className="rank">#{rank}</span>
+            </div>
           </div>
           <div className="MyRankCard-stats">
-             <div className="stat">
-               <span className="label">{app.translator.trans('huseyinfiliz-pickem.lib.common.points')}</span>
-               <span className="value">{points}</span>
-             </div>
-             <div className="stat">
-               <span className="label">{app.translator.trans('huseyinfiliz-pickem.lib.headers.correct')}</span>
-               <span className="value">{correct}</span>
-             </div>
-             <div className="stat">
-               <span className="label">{app.translator.trans('huseyinfiliz-pickem.lib.headers.accuracy')}</span>
-               <span className="value">{accuracy}%</span>
-             </div>
+            <div className="stat">
+              <span className="label">{app.translator.trans('huseyinfiliz-pickem.lib.common.points')}</span>
+              <span className="value">{points}</span>
+            </div>
+            <div className="stat">
+              <span className="label">{app.translator.trans('huseyinfiliz-pickem.lib.headers.correct')}</span>
+              <span className="value">{correct}</span>
+            </div>
+            <div className="stat">
+              <span className="label">{app.translator.trans('huseyinfiliz-pickem.lib.headers.accuracy')}</span>
+              <span className="value">{accuracy}%</span>
+            </div>
           </div>
         </div>
       </div>
@@ -104,13 +100,17 @@ export default class LeaderboardTab extends Component<LeaderboardTabAttrs> {
             <div className={`Podium-card ${positions[index]} ${isMe ? 'is-me' : ''}`} key={index}>
               <div className="medal">{medals[index]}</div>
               <div className="rank">#{index + 1}</div>
-              
-              <div className="podium-avatar" style={{marginBottom: '5px'}}>
-                 {user ? avatar(user, { className: 'Avatar' }) : null}
+
+              <div className="podium-avatar" style={{ marginBottom: '5px' }}>
+                {user ? <Avatar user={user} className="Avatar" /> : null}
               </div>
 
               <div className="username">
-                {user ? (typeof user.displayName === 'function' ? user.displayName() : user.displayName) : app.translator.trans('core.lib.username.deleted_text')}
+                {user
+                  ? typeof user.displayName === 'function'
+                    ? user.displayName()
+                    : user.displayName
+                  : app.translator.trans('core.lib.username.deleted_text')}
               </div>
               <div className="points">
                 {totalPoints}
@@ -149,7 +149,7 @@ export default class LeaderboardTab extends Component<LeaderboardTabAttrs> {
           {userScores.map((score: any, index: number) => {
             const user = score && (typeof score.user === 'function' ? score.user() : score.user);
             const scoreId = (score && (typeof score.id === 'function' ? score.id() : score.id)) || index;
-            
+
             const totalPoints = typeof score.totalPoints === 'function' ? score.totalPoints() : score.totalPoints;
             const correctPicks = typeof score.correctPicks === 'function' ? score.correctPicks() : score.correctPicks;
             const totalPicks = typeof score.totalPicks === 'function' ? score.totalPicks() : score.totalPicks;
@@ -158,24 +158,29 @@ export default class LeaderboardTab extends Component<LeaderboardTabAttrs> {
 
             return (
               <div key={String(scoreId)} className={`PickemList-item ${index < 3 ? `top-${index + 1}` : ''} ${isMe ? 'is-me' : ''}`}>
-                
                 <div className="PickemList-cell type-rank">
                   <span className="mobile-label">{app.translator.trans('huseyinfiliz-pickem.lib.headers.rank')}</span>
                   <span className="value">#{index + 1}</span>
                 </div>
 
                 <div className="PickemList-cell type-player">
-                  <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
-                      {user ? avatar(user, {className: 'Avatar--small'}) : null}
-                      <span className="value">
-                        {user ? (typeof user.displayName === 'function' ? user.displayName() : user.displayName) : app.translator.trans('core.lib.username.deleted_text')}
-                      </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    {user ? <Avatar user={user} className="Avatar--small" /> : null}
+                    <span className="value">
+                      {user
+                        ? typeof user.displayName === 'function'
+                          ? user.displayName()
+                          : user.displayName
+                        : app.translator.trans('core.lib.username.deleted_text')}
+                    </span>
                   </div>
                 </div>
 
                 <div className="PickemList-cell type-stat">
                   <span className="mobile-label">{app.translator.trans('huseyinfiliz-pickem.lib.common.points')}</span>
-                  <span className="value"><strong>{totalPoints}</strong></span>
+                  <span className="value">
+                    <strong>{totalPoints}</strong>
+                  </span>
                 </div>
 
                 <div className="PickemList-cell type-stat">
@@ -192,7 +197,6 @@ export default class LeaderboardTab extends Component<LeaderboardTabAttrs> {
                   <span className="mobile-label">{app.translator.trans('huseyinfiliz-pickem.lib.headers.accuracy')}</span>
                   <span className="value">{accuracy}%</span>
                 </div>
-
               </div>
             );
           })}

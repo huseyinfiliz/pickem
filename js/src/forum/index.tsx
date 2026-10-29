@@ -1,18 +1,16 @@
+import IndexSidebar from 'flarum/forum/components/IndexSidebar';
 import app from 'flarum/forum/app';
-import { extend } from 'flarum/common/extend';
-import IndexPage from 'flarum/forum/components/IndexPage';
+import { extend as extendPrototype } from 'flarum/common/extend';
 import LinkButton from 'flarum/common/components/LinkButton';
-import NotificationGrid from 'flarum/forum/components/NotificationGrid';
 import commonExtenders from '../common/extend';
+export const extend = commonExtenders;
 import PickemPage from './components/PickemPage';
 import EventResultNotification from './components/EventResultNotification';
 
 app.initializers.add('huseyinfiliz/pickem', () => {
-  commonExtenders.forEach((extender) => extender.extend(app));
-
   app.routes.pickem = { path: '/pickem', component: PickemPage };
 
-  extend(IndexPage.prototype, 'navItems', function (items) {
+  extendPrototype(IndexSidebar.prototype, 'navItems', function (items) {
     if (app.forum.attribute('pickem.canView')) {
       items.add(
         'pickem',

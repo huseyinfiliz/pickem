@@ -2,30 +2,25 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
-use Flarum\Api\Controller\AbstractListController;
 use Flarum\Http\RequestUtil;
 use Flarum\Http\UrlGenerator;
-use HuseyinFiliz\Pickem\Api\Serializer\PickSerializer;
+use HuseyinFiliz\Pickem\Api\Resource\PickResource;
 use HuseyinFiliz\Pickem\Pick;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Psr\Http\Message\ServerRequestInterface;
-use Tobscure\JsonApi\Document;
 
 class ListPicksController extends AbstractListController
 {
-    public $serializer = PickSerializer::class;
+    public $resource = PickResource::class;
     public $include = ['event', 'event.homeTeam', 'event.awayTeam', 'event.week', 'user'];
-    
+
     public $limit = 20;
     public $sort = ['createdAt' => 'desc'];
     public $sortFields = ['createdAt', 'updatedAt'];
 
-    protected $url;
-
-    public function __construct(UrlGenerator $url)
+    public function __construct(protected UrlGenerator $url)
     {
-        $this->url = $url;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)
@@ -73,7 +68,7 @@ class ListPicksController extends AbstractListController
             $limit,
             $total
         );
-        
+
         $document->setMeta(['total' => $total]);
 
         return $results;

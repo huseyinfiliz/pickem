@@ -11,23 +11,23 @@ export default class EventResultNotification extends Notification {
 
   content() {
     const notification = this.attrs.notification;
-    const content = notification.content() || {};
+    const content = (notification.content() || {}) as { homeTeam?: string; awayTeam?: string; homeScore?: number; awayScore?: number };
 
     const homeTeam = content.homeTeam || app.translator.trans('huseyinfiliz-pickem.lib.common.home');
     const awayTeam = content.awayTeam || app.translator.trans('huseyinfiliz-pickem.lib.common.away');
-    
+
     const homeScore = content.homeScore !== undefined ? content.homeScore : 0;
     const awayScore = content.awayScore !== undefined ? content.awayScore : 0;
 
     const reverse = app.forum.attribute<boolean>('pickem.reverseDisplay');
 
     if (reverse) {
-        return app.translator.trans('huseyinfiliz-pickem.forum.notification', {
-            home: awayTeam,
-            hScore: awayScore,
-            aScore: homeScore,
-            away: homeTeam,
-        });
+      return app.translator.trans('huseyinfiliz-pickem.forum.notification', {
+        home: awayTeam,
+        hScore: awayScore,
+        aScore: homeScore,
+        away: homeTeam,
+      });
     }
 
     return app.translator.trans('huseyinfiliz-pickem.forum.notification', {

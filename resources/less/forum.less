@@ -8,7 +8,7 @@
 @pickem-danger-color: #e74c3c;
 @pickem-warning-color: #f39c12;
 @pickem-info-color: #3498db;
-@pickem-finished-color: @muted-color; 
+@pickem-finished-color: var(--muted-color);
 
 // ============================================
 // TÜM STILLER .PickemPage SCOPE'UNDA
@@ -203,7 +203,7 @@
 
         i {
           font-size: 11px;
-          color: @primary-color; 
+          color: var(--primary-color);
           width: 14px;
         }
       }
@@ -221,13 +221,13 @@
         cursor: pointer;
         
         &:focus {
-          border-color: @primary-color; 
+          border-color: var(--primary-color);
           outline: none;
-          box-shadow: 0 0 0 3px fade(@primary-color, 10%); 
+          box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 10%, transparent);
         }
 
         &:hover {
-          border-color: fade(@primary-color, 50%); 
+          border-color: color-mix(in srgb, var(--primary-color) 50%, transparent);
         }
       }
     }
@@ -370,13 +370,13 @@
       gap: 12px;
       margin: 16px 0; 
       padding: 12px;
-      background: fade(@primary-color, 8%); 
+      background: color-mix(in srgb, var(--primary-color) 8%, transparent);
       border-radius: var(--border-radius); 
 
       .score-number {
         font-size: 28px;
         font-weight: 800;
-        color: @primary-color; 
+        color: var(--primary-color);
       }
 
       .score-separator {
@@ -406,7 +406,7 @@
         color: var(--body-color);
 
         i {
-          color: @primary-color; 
+          color: var(--primary-color);
           font-size: 11px;
           width: 14px;
           text-align: center;
@@ -467,9 +467,9 @@
         box-shadow: 0 1px 2px rgba(0,0,0,0.02); 
         
         &:not(.Button--pickem-selected):hover:not(:disabled) {
-          border-color: @primary-color; 
-          color: @primary-color; 
-          background: fade(@primary-color, 10%); 
+          border-color: var(--primary-color);
+          color: var(--primary-color);
+          background: color-mix(in srgb, var(--primary-color) 10%, transparent);
           transform: translateY(-1px);
           box-shadow: 0 3px 6px rgba(0,0,0,0.05);
         }
@@ -478,7 +478,7 @@
           background-color: var(--button-primary-bg); 
           border-color: var(--button-primary-bg);
           color: var(--button-primary-color); 
-          box-shadow: 0 4px 10px fade(@primary-color, 30%); 
+          box-shadow: 0 4px 10px color-mix(in srgb, var(--primary-color) 30%, transparent);
           transform: translateY(-1px); 
         }
 
@@ -598,7 +598,7 @@
         font-size: 24px;
         font-weight: 800;
         margin-bottom: 10px;
-        color: @primary-color; 
+        color: var(--primary-color);
         
         small {
           font-size: 11px;
@@ -721,7 +721,7 @@
       &.type-rank { 
         flex: 0 0 60px; 
         font-weight: 700; 
-        color: @primary-color; 
+        color: var(--primary-color);
       }
       &.type-player { 
         flex: 2; 
@@ -1053,25 +1053,25 @@
 
 .PickemList-item {
   &.is-me {
-    background: fade(@primary-color, 8%) !important; // Hafif primary renk arka planı
-    border-left: 3px solid @primary-color !important;
+    background: color-mix(in srgb, var(--primary-color) 8%, transparent) !important;
+    border-left: 3px solid var(--primary-color) !important;
     
     .value {
       font-weight: 700;
-      color: @primary-color;
+      color: var(--primary-color);
     }
   }
 }
 
 .Podium-card {
   &.is-me {
-    background: fade(@primary-color, 8%);
-    border-color: @primary-color;
+    background: color-mix(in srgb, var(--primary-color) 8%, transparent);
+    border-color: var(--primary-color);
     transform: translateY(-5px); // Hafifçe yukarı çıkar
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     
     .username {
-      color: @primary-color;
+      color: var(--primary-color);
     }
   }
 }
@@ -1079,8 +1079,8 @@
 // Mobilde "Benim" kartım daha belirgin olsun
 @media (max-width: 767.98px) {
   .PickemList-item.is-me {
-    border: 2px solid fade(@primary-color, 30%) !important;
-    box-shadow: 0 4px 12px fade(@primary-color, 15%);
+    border: 2px solid color-mix(in srgb, var(--primary-color) 30%, transparent) !important;
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--primary-color) 15%, transparent);
   }
 }
 
@@ -1090,7 +1090,7 @@
 
 .MyRankCard {
   background: var(--body-bg);
-  border: 2px solid @primary-color;
+  border: 2px solid var(--primary-color);
   border-radius: var(--border-radius);
   padding: 16px;
   margin-bottom: 24px;
@@ -1113,8 +1113,7 @@
     gap: 12px;
     
     .Avatar {
-      width: 48px;
-      height: 48px;
+      .Avatar--size(48px);
     }
     
     .info {
@@ -1131,7 +1130,7 @@
       .rank {
         font-size: 24px;
         font-weight: 800;
-        color: @primary-color;
+        color: var(--primary-color);
       }
     }
   }

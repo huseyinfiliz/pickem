@@ -5,5 +5,5 @@ export default class Week extends Model {
   name = Model.attribute<string>('name');
   seasonId = Model.attribute<string | number | null>('seasonId');
   weekNumber = Model.attribute<number | null>('weekNumber');
-  season = Model.hasOne<Season | false>('season');
+  season = Model.hasOne<Season>('season');
 }

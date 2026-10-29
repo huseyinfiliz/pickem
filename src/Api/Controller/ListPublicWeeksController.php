@@ -2,19 +2,17 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
-use Flarum\Api\Controller\AbstractListController;
 use Flarum\Http\RequestUtil;
-use HuseyinFiliz\Pickem\Api\Serializer\WeekSerializer;
+use HuseyinFiliz\Pickem\Api\Resource\WeekResource;
 use HuseyinFiliz\Pickem\Week;
 use Psr\Http\Message\ServerRequestInterface;
-use Tobscure\JsonApi\Document;
 
 class ListPublicWeeksController extends AbstractListController
 {
-    public $serializer = WeekSerializer::class;
-    
+    public $resource = WeekResource::class;
+
     // Public olduğu için 'season' ilişkisini dahil etmeye gerek yok
-    // public $include = ['season']; 
+    // public $include = ['season'];
 
     protected function data(ServerRequestInterface $request, Document $document)
     {

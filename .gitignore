@@ -14,3 +14,7 @@ tests/.phpunit.result.cache
 .idea/*
 .vscode
 js/coverage-ts
+
+# PHP CS Fixer configuration
+/.php-cs-fixer.cache
+/.php-cs-fixer.php

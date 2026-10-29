@@ -2,38 +2,33 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
-use Flarum\Api\Controller\AbstractListController;
 use Flarum\Http\RequestUtil;
 use Flarum\Http\UrlGenerator;
-use HuseyinFiliz\Pickem\Api\Serializer\UserScoreSerializer;
+use HuseyinFiliz\Pickem\Api\Resource\UserScoreResource;
 use HuseyinFiliz\Pickem\UserScore;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
-use Tobscure\JsonApi\Document;
 
 class ListLeaderboardController extends AbstractListController
 {
-    public $serializer = UserScoreSerializer::class;
+    public $resource = UserScoreResource::class;
 
     public $include = ['user'];
-    
+
     public $limit = 20;
 
-    protected $url;
-
-    public function __construct(UrlGenerator $url)
+    public function __construct(protected UrlGenerator $url)
     {
-        $this->url = $url;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)
     {
         $actor = RequestUtil::getActor($request);
         $actor->assertCan('pickem.view');
-        
+
         $query = UserScore::query();
         $query->whereNull('season_id');
-        
+
         $filters = $this->extractFilter($request);
         $filterUser = Arr::get($filters, 'user');
 
@@ -43,7 +38,7 @@ class ListLeaderboardController extends AbstractListController
 
         $query->orderBy('total_points', 'desc')
               ->orderBy('correct_picks', 'desc');
-        
+
         $query->with(['user']);
 
         $limit = $this->extractLimit($request);
@@ -71,7 +66,7 @@ class ListLeaderboardController extends AbstractListController
             $limit,
             $total
         );
-        
+
         $document->setMeta(['total' => $total]);
 
         return $results;

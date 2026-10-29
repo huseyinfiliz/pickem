@@ -2,25 +2,20 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
-use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Http\RequestUtil;
-use HuseyinFiliz\Pickem\Api\Serializer\TeamSerializer;
+use HuseyinFiliz\Pickem\Api\Resource\TeamResource;
 use HuseyinFiliz\Pickem\Team;
 use HuseyinFiliz\Pickem\Validator\TeamValidator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Psr\Http\Message\ServerRequestInterface;
-use Tobscure\JsonApi\Document;
 
 class CreateTeamController extends AbstractCreateController
 {
-    public $serializer = TeamSerializer::class;
+    public $resource = TeamResource::class;
 
-    protected $validator;
-
-    public function __construct(TeamValidator $validator)
+    public function __construct(protected TeamValidator $validator)
     {
-        $this->validator = $validator;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)
@@ -31,12 +26,12 @@ class CreateTeamController extends AbstractCreateController
         $data = Arr::get($request->getParsedBody(), 'data.attributes', []);
 
         // --- YENİ MANTIK ---
-        
+
         // 1. Specific logic: Auto-generate slug if empty
         if (empty($data['slug'])) {
             $data['slug'] = Str::slug(Arr::get($data, 'name'));
         }
-        
+
         // 2. Convert camelCase keys (logoPath) to snake_case (logo_path)
         $attributes = [];
         foreach ($data as $key => $value) {

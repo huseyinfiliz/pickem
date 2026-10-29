@@ -7,7 +7,8 @@ use Illuminate\Validation\Rule;
 
 class WeekValidator extends AbstractValidator
 {
-    protected function getRules()
+    public ?\Illuminate\Database\Eloquent\Model $model = null;
+    protected function getRules(): array
     {
         $required = $this->model ? 'sometimes' : 'required';
 

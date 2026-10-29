@@ -10,6 +10,6 @@ export default class UserScore extends Model {
   correctPicks = Model.attribute<number>('correctPicks');
   accuracy = Model.attribute<number>('accuracy');
 
-  user = Model.hasOne<User | false>('user');
-  season = Model.hasOne<Season | false>('season');
+  user = Model.hasOne<User>('user');
+  season = Model.hasOne<Season>('season');
 }

@@ -1,35 +1,33 @@
 import ExtensionPage from 'flarum/admin/components/ExtensionPage';
+import app from 'flarum/admin/app';
+import type Mithril from 'mithril';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import Alert from 'flarum/common/components/Alert';
 import TeamsTab from './TeamsTab';
 import SeasonsTab from './SeasonsTab';
 import WeeksTab from './WeeksTab';
 import EventsTab from './EventsTab';
-import SettingsTab from './SettingsTab'; 
+import SettingsTab from './SettingsTab';
 
 export default class PickemPage extends ExtensionPage {
   private activeTab: string = 'events';
-  private loading: boolean = true;
-  private error: string | null = null; 
+  loading: boolean = true;
+  private error: string | null = null;
 
   oninit(vnode: any) {
     super.oninit(vnode);
-    
+
     const urlTab = m.route.param('tab');
     if (urlTab && ['events', 'teams', 'seasons', 'weeks', 'settings'].includes(urlTab)) {
       this.activeTab = urlTab;
     }
-    
+
     this.loadData();
   }
 
   async loadData() {
     try {
-      await Promise.all([
-        app.store.find('pickem-teams'),
-        app.store.find('pickem-seasons'),
-        app.store.find('pickem-weeks', { include: 'season' }),
-      ]);
+      await Promise.all([app.store.find('pickem-teams'), app.store.find('pickem-seasons'), app.store.find('pickem-weeks', { include: 'season' })]);
       this.error = null;
     } catch (error: any) {
       console.error('Pickem admin data load error:', error);
@@ -67,15 +65,13 @@ export default class PickemPage extends ExtensionPage {
             {this.renderTab('settings', 'fas fa-cogs', app.translator.trans('huseyinfiliz-pickem.lib.nav.settings'))}
           </div>
 
-          <div className="PickemPage-content">
-            {tabContent}
-          </div>
+          <div className="PickemPage-content">{tabContent}</div>
         </div>
       </div>
     );
   }
 
-  renderTab(key: string, icon: string, label: string) {
+  renderTab(key: string, icon: string, label: Mithril.Children) {
     const isActive = this.activeTab === key;
     return (
       <button

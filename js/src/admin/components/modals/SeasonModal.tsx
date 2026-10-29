@@ -1,20 +1,22 @@
-import Modal from 'flarum/common/components/Modal';
+import Form from 'flarum/common/components/Form';
+import FormModal, { IFormModalAttrs } from 'flarum/common/components/FormModal';
+import type Mithril from 'mithril';
 import Button from 'flarum/common/components/Button';
 import { slug } from 'flarum/common/utils/string';
-import Season from '../../../common/models/Season'; 
+import Season from '../../../common/models/Season';
 
-interface ISeasonModalAttrs {
+interface ISeasonModalAttrs extends IFormModalAttrs {
   season?: Season | null;
   onsave: () => void;
 }
 
-export default class SeasonModal extends Modal<ISeasonModalAttrs> {
+export default class SeasonModal extends FormModal<ISeasonModalAttrs> {
   private season: Season | null | undefined;
   private name: string = '';
   private slug: string = '';
   private startDate: string = '';
   private endDate: string = '';
-  private loading: boolean = false;
+  loading: boolean = false;
 
   oninit(vnode: any) {
     super.oninit(vnode);
@@ -27,7 +29,7 @@ export default class SeasonModal extends Modal<ISeasonModalAttrs> {
     }
   }
 
-  formatDateForInput(dateString: string | Date | undefined): string {
+  formatDateForInput(dateString: string | Date | null | undefined): string {
     if (!dateString) return '';
     const date = new Date(dateString);
     return date.toISOString().slice(0, 10);
@@ -37,7 +39,7 @@ export default class SeasonModal extends Modal<ISeasonModalAttrs> {
     return 'SeasonModal Modal--small';
   }
 
-  title(): string {
+  title(): Mithril.Children {
     // GÜNCELLENDİ: resource değişkeni ve parametreler kaldırıldı
     return this.season
       ? app.translator.trans('huseyinfiliz-pickem.lib.actions.edit')
@@ -47,7 +49,7 @@ export default class SeasonModal extends Modal<ISeasonModalAttrs> {
   content() {
     return (
       <div className="Modal-body">
-        <div className="Form">
+        <Form>
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-pickem.lib.form.name')}</label>
             <input
@@ -69,7 +71,9 @@ export default class SeasonModal extends Modal<ISeasonModalAttrs> {
               className="FormControl"
               type="text"
               value={this.slug}
-              oninput={(e: InputEvent) => { this.slug = (e.target as HTMLInputElement).value; }}
+              oninput={(e: InputEvent) => {
+                this.slug = (e.target as HTMLInputElement).value;
+              }}
             />
           </div>
 
@@ -79,7 +83,9 @@ export default class SeasonModal extends Modal<ISeasonModalAttrs> {
               className="FormControl"
               type="date"
               value={this.startDate}
-              oninput={(e: InputEvent) => { this.startDate = (e.target as HTMLInputElement).value; }}
+              oninput={(e: InputEvent) => {
+                this.startDate = (e.target as HTMLInputElement).value;
+              }}
             />
           </div>
 
@@ -89,20 +95,18 @@ export default class SeasonModal extends Modal<ISeasonModalAttrs> {
               className="FormControl"
               type="date"
               value={this.endDate}
-              oninput={(e: InputEvent) => { this.endDate = (e.target as HTMLInputElement).value; }}
+              oninput={(e: InputEvent) => {
+                this.endDate = (e.target as HTMLInputElement).value;
+              }}
             />
           </div>
 
           <div className="Form-group">
-            <Button
-              className="Button Button--primary"
-              type="submit"
-              loading={this.loading}
-            >
+            <Button className="Button Button--primary" type="submit" loading={this.loading}>
               {app.translator.trans('huseyinfiliz-pickem.lib.buttons.save')}
             </Button>
           </div>
-        </div>
+        </Form>
       </div>
     );
   }
@@ -114,14 +118,12 @@ export default class SeasonModal extends Modal<ISeasonModalAttrs> {
     const data = {
       name: this.name,
       slug: this.slug,
-      startDate: this.startDate || null, 
-      endDate: this.endDate || null,     
+      startDate: this.startDate || null,
+      endDate: this.endDate || null,
     };
 
     try {
-      const promise = this.season
-        ? this.season.save(data)
-        : app.store.createRecord('pickem-seasons').save(data);
+      const promise = this.season ? this.season.save(data) : app.store.createRecord('pickem-seasons').save(data);
 
       await promise;
       this.attrs.onsave();

@@ -5,6 +5,7 @@ namespace HuseyinFiliz\Pickem;
 use Carbon\Carbon;
 use Flarum\Database\AbstractModel;
 use Flarum\Database\ScopeVisibilityTrait;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property int $id
@@ -27,6 +28,7 @@ use Flarum\Database\ScopeVisibilityTrait;
  */
 class Event extends AbstractModel
 {
+    use HasFactory;
     use ScopeVisibilityTrait;
 
     public $timestamps = true;
@@ -34,15 +36,15 @@ class Event extends AbstractModel
     protected $table = 'pickem_events';
 
     protected $fillable = [
-        'week_id', 
-        'home_team_id', 
+        'week_id',
+        'home_team_id',
         'away_team_id',
-        'match_date', 
-        'cutoff_date', 
+        'match_date',
+        'cutoff_date',
         'allow_draw',
-        'status', 
-        'home_score', 
-        'away_score', 
+        'status',
+        'home_score',
+        'away_score',
         'result'
     ];
 
@@ -57,14 +59,14 @@ class Event extends AbstractModel
     ];
 
     // Status constants
-    const STATUS_SCHEDULED = 'scheduled';
-    const STATUS_CLOSED = 'closed';
-    const STATUS_FINISHED = 'finished';
+    public const STATUS_SCHEDULED = 'scheduled';
+    public const STATUS_CLOSED = 'closed';
+    public const STATUS_FINISHED = 'finished';
 
     // Result constants
-    const RESULT_HOME = 'home';
-    const RESULT_AWAY = 'away';
-    const RESULT_DRAW = 'draw';
+    public const RESULT_HOME = 'home';
+    public const RESULT_AWAY = 'away';
+    public const RESULT_DRAW = 'draw';
 
     /**
      * Boot the model - register event listeners
@@ -75,19 +77,19 @@ class Event extends AbstractModel
         // Auto-calculate result when scores are set
         static::saving(function (Event $event) {
             // Skorlar set edildiyse result'ı hesapla
-            if ($event->isDirty(['home_score', 'away_score']) && 
-                $event->home_score !== null && 
+            if ($event->isDirty(['home_score', 'away_score']) &&
+                $event->home_score !== null &&
                 $event->away_score !== null) {
                 $event->result = $event->calculateResult();
-                
+
                 // Otomatik olarak finished'a çek
                 if ($event->result !== null && $event->status === self::STATUS_SCHEDULED) {
                     $event->status = self::STATUS_FINISHED;
                 }
             }
-            
+
             // Cutoff geçtiyse otomatik kapat
-            if ($event->status === self::STATUS_SCHEDULED && 
+            if ($event->status === self::STATUS_SCHEDULED &&
                 Carbon::now()->isAfter($event->cutoff_date)) {
                 $event->status = self::STATUS_CLOSED;
             }
@@ -153,7 +155,7 @@ class Event extends AbstractModel
      */
     public function canPick(): bool
     {
-        return $this->status === self::STATUS_SCHEDULED && 
+        return $this->status === self::STATUS_SCHEDULED &&
                Carbon::now()->isBefore($this->cutoff_date);
     }
 

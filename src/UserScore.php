@@ -5,6 +5,7 @@ namespace HuseyinFiliz\Pickem;
 use Flarum\Database\AbstractModel;
 use Flarum\Database\ScopeVisibilityTrait;
 use Flarum\User\User;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property int $id
@@ -20,12 +21,13 @@ use Flarum\User\User;
  */
 class UserScore extends AbstractModel
 {
+    use HasFactory;
     use ScopeVisibilityTrait;
 
     protected $table = 'pickem_user_scores';
 
-    public $timestamps = true; 
-	
+    public $timestamps = true;
+
     /**
      * N+1 sorununu çözmek için runtime sırasında hesaplanan sıralamayı tutar.
      * Veritabanında böyle bir kolon yoktur.
@@ -121,7 +123,7 @@ class UserScore extends AbstractModel
             ->where('total_points', '=', $this->total_points)
             ->where('correct_picks', '>', $this->correct_picks)
             ->count();
-            
+
         return $higherPoints + $equalPointsBetterTieBreaker + 1;
     }
 }

@@ -2,9 +2,12 @@
   "extends": "flarum-tsconfig",
   "include": [
     "src/**/*",
-    "../vendor/flarum/core/js/dist-typings/@types/**/*"
+    "../vendor/*/*/js/dist-typings/@types/**/*"
   ],
   "compilerOptions": {
+    // Only load the type packages the code imports, not every one in
+    // node_modules, such as the @types/node webpack brings along.
+    "types": [],
     "declarationDir": "./dist-typings",
     "baseUrl": ".",
     "paths": {

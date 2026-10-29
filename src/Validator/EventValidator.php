@@ -7,7 +7,8 @@ use Illuminate\Validation\Rule;
 
 class EventValidator extends AbstractValidator
 {
-    protected function getRules()
+    public ?\Illuminate\Database\Eloquent\Model $model = null;
+    protected function getRules(): array
     {
         return [
             'homeTeamId' => [
@@ -30,20 +31,20 @@ class EventValidator extends AbstractValidator
             'cutoffDate' => ['required', 'date', 'before:matchDate'],
             'allowDraw' => ['boolean'],
             'status' => ['string', Rule::in(['scheduled', 'closed', 'finished'])],
-            
+
             'homeScore' => ['nullable', 'integer', 'min:0', 'required_with:awayScore'],
             'awayScore' => ['nullable', 'integer', 'min:0', 'required_with:homeScore'],
         ];
     }
 
-    protected function getMessages()
+    protected function getMessages(): array
     {
         // GÜNCELLENDİ: Yeni sadeleştirilmiş mesaj yapısı
         $prefix = 'huseyinfiliz-pickem.lib.messages.';
 
         return [
             'homeTeamId.different' => $prefix . 'same_team',
-            'cutoffDate.before' => $prefix . 'invalid_outcome', 
+            'cutoffDate.before' => $prefix . 'invalid_outcome',
             'homeScore.required_with' => $prefix . 'scores_required',
             'awayScore.required_with' => $prefix . 'scores_required',
             'homeTeamId.exists' => $prefix . 'invalid_outcome',

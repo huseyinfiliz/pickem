@@ -18,10 +18,12 @@ export default class SeasonsTab extends Component {
           <Button
             className="Button Button--primary"
             icon="fas fa-plus"
-            onclick={() => app.modal.show(SeasonModal, {
-              season: null,
-              onsave: () => m.redraw() 
-            })}
+            onclick={() =>
+              app.modal.show(SeasonModal, {
+                season: null,
+                onsave: () => m.redraw(),
+              })
+            }
           >
             {/* GÜNCELLENDİ: Parametre kaldırıldı */}
             {app.translator.trans('huseyinfiliz-pickem.lib.actions.create')}
@@ -42,44 +44,48 @@ export default class SeasonsTab extends Component {
               <p>{app.translator.trans('huseyinfiliz-pickem.lib.messages.no_data')}</p>
             </div>
           ) : (
-            seasons.map(season => (
+            seasons.map((season) => (
               <div key={season.id()} className="CardList-item">
-                <div className="CardList-item-cell CardList-item-cell--primary" data-label={app.translator.trans('huseyinfiliz-pickem.lib.headers.name')}>
+                <div
+                  className="CardList-item-cell CardList-item-cell--primary"
+                  data-label={app.translator.trans('huseyinfiliz-pickem.lib.headers.name')}
+                >
                   {season.name()}
                 </div>
 
-                <div className="CardList-item-cell CardList-item-cell--muted" data-label={app.translator.trans('huseyinfiliz-pickem.lib.headers.slug')}>
+                <div
+                  className="CardList-item-cell CardList-item-cell--muted"
+                  data-label={app.translator.trans('huseyinfiliz-pickem.lib.headers.slug')}
+                >
                   {season.slug()}
                 </div>
 
                 <div className="CardList-item-cell" data-label={app.translator.trans('huseyinfiliz-pickem.lib.common.date')}>
-                  {season.startDate() && season.endDate() 
-                    ? (
-                      <span>
-                        {new Date(season.startDate()!).toLocaleDateString()}
-                        {' - '}
-                        {new Date(season.endDate()!).toLocaleDateString()}
-                      </span>
-                    )
-                    : '-'}
+                  {season.startDate() && season.endDate() ? (
+                    <span>
+                      {new Date(season.startDate()!).toLocaleDateString()}
+                      {' - '}
+                      {new Date(season.endDate()!).toLocaleDateString()}
+                    </span>
+                  ) : (
+                    '-'
+                  )}
                 </div>
 
                 <div className="CardList-item-actions">
                   <Button
                     className="Button Button--primary"
                     icon="fas fa-edit"
-                    onclick={() => app.modal.show(SeasonModal, {
-                      season: season,
-                      onsave: () => m.redraw() 
-                    })}
+                    onclick={() =>
+                      app.modal.show(SeasonModal, {
+                        season: season,
+                        onsave: () => m.redraw(),
+                      })
+                    }
                   >
                     {app.translator.trans('huseyinfiliz-pickem.lib.buttons.edit')}
                   </Button>
-                  <Button
-                    className="Button Button--danger"
-                    icon="fas fa-trash"
-                    onclick={() => this.deleteSeason(season)}
-                  >
+                  <Button className="Button Button--danger" icon="fas fa-trash" onclick={() => this.deleteSeason(season)}>
                     {app.translator.trans('huseyinfiliz-pickem.lib.buttons.delete')}
                   </Button>
                 </div>

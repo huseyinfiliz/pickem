@@ -40,14 +40,13 @@ export default class MatchesTab extends Component<IMatchesTabAttrs> {
     const weekIds = [];
 
     if (this.selectedWeek !== 'all') {
-        filters.week = this.selectedWeek;
-    } 
-    else if (this.selectedSeason !== 'all') {
+      filters.week = this.selectedWeek;
+    } else if (this.selectedSeason !== 'all') {
       const weeks = app.store.all<Week>('pickem-weeks').filter((week) => week.seasonId() == this.selectedSeason);
       weekIds.push(...weeks.map((week) => week.id()));
-      
-      weekIds.push('null'); 
-      
+
+      weekIds.push('null');
+
       filters.week = weekIds.join(',');
     }
 
@@ -69,52 +68,57 @@ export default class MatchesTab extends Component<IMatchesTabAttrs> {
     const offset = clear ? 0 : this.events.length;
     const filters = this.buildFilters();
 
-    app.store.find<PickemEvent[]>('pickem-events', {
-      include: 'homeTeam,awayTeam,week',
-      filter: filters,
-      sort: '-matchDate',
-      page: { limit: this.limit, offset: offset }
-    }).then((results) => {
-      if (clear) {
-        this.events = results;
-      } else {
-        this.events = [...this.events, ...results];
-      }
-      
-      this.hasMore = results.length >= this.limit;
-      this.fetchPicksForEvents(results);
+    app.store
+      .find<PickemEvent[]>('pickem-events', {
+        include: 'homeTeam,awayTeam,week',
+        filter: filters,
+        sort: '-matchDate',
+        page: { limit: this.limit, offset: offset },
+      })
+      .then((results) => {
+        if (clear) {
+          this.events = results;
+        } else {
+          this.events = [...this.events, ...results];
+        }
 
-    }).catch(error => {
-      console.error(error);
-    }).finally(() => {
-      this.loading = false;
-      m.redraw();
-    });
+        this.hasMore = results.length >= this.limit;
+        this.fetchPicksForEvents(results);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        this.loading = false;
+        m.redraw();
+      });
   }
-  
+
   fetchPicksForEvents(events: PickemEvent[]) {
     if (!app.session.user || !app.forum.attribute('pickem.makePicks')) return;
-    
+
     const currentPicks = this.attrs.picks || {};
-    const eventsToFetch = events.filter(e => !currentPicks[String(e.id())]);
+    const eventsToFetch = events.filter((e) => !currentPicks[String(e.id())]);
     if (eventsToFetch.length === 0) return;
 
-    const eventIds = eventsToFetch.map(e => e.id()).join(',');
+    const eventIds = eventsToFetch.map((e) => e.id()).join(',');
 
-    app.store.find<any[]>('pickem-picks', {
-      filter: { user: app.session.user.id(), event: eventIds }
-    }).then((results) => {
+    app.store
+      .find<any[]>('pickem-picks', {
+        filter: { user: app.session.user.id(), event: eventIds },
+      })
+      .then((results) => {
         if (Array.isArray(results) && results.length > 0) {
-            const newPicks = results.reduce((acc: any, pick: any) => {
-                 const eId = pick.event() ? pick.event().id() : pick.attribute('eventId');
-                 if(eId) acc[String(eId)] = pick;
-                 return acc;
-            }, {});
-            const merged = { ...this.attrs.picks, ...newPicks };
-            this.attrs.onPickChange(merged);
-            m.redraw();
+          const newPicks = results.reduce((acc: any, pick: any) => {
+            const eId = pick.event() ? pick.event().id() : pick.attribute('eventId');
+            if (eId) acc[String(eId)] = pick;
+            return acc;
+          }, {});
+          const merged = { ...this.attrs.picks, ...newPicks };
+          this.attrs.onPickChange(merged);
+          m.redraw();
         }
-    });
+      });
   }
 
   async makePick(eventId: number, outcome: string) {
@@ -128,9 +132,9 @@ export default class MatchesTab extends Component<IMatchesTabAttrs> {
       const updateParent = (newPickVal: any) => {
         const newPicks = { ...this.attrs.picks };
         if (newPickVal === null) {
-            delete newPicks[eventIdStr];
+          delete newPicks[eventIdStr];
         } else {
-            newPicks[eventIdStr] = newPickVal;
+          newPicks[eventIdStr] = newPickVal;
         }
         this.attrs.onPickChange(newPicks);
       };
@@ -145,9 +149,9 @@ export default class MatchesTab extends Component<IMatchesTabAttrs> {
         app.alerts.show({ type: 'success' }, app.translator.trans('huseyinfiliz-pickem.lib.messages.saved'));
       } else {
         const newPick = app.store.createRecord('pickem-picks');
-        const saved = await newPick.save({ 
+        const saved = await newPick.save({
           eventId: eventId,
-          selectedOutcome: outcome 
+          selectedOutcome: outcome,
         });
         updateParent(saved);
         app.alerts.show({ type: 'success' }, app.translator.trans('huseyinfiliz-pickem.lib.messages.saved'));
@@ -169,16 +173,17 @@ export default class MatchesTab extends Component<IMatchesTabAttrs> {
     const allSeasons = app.store.all<Season>('pickem-seasons');
     const allTeams = app.store.all<Team>('pickem-teams');
     const hasEvents = this.events.length > 0;
-    
+
     let availableWeeks: Week[] = [];
     if (this.selectedSeason !== 'all') {
-        availableWeeks = app.store.all<Week>('pickem-weeks')
-            .filter(week => week.seasonId() == this.selectedSeason)
-            .sort((a, b) => {
-                const numA = parseInt(String(a.weekNumber() || 0));
-                const numB = parseInt(String(b.weekNumber() || 0));
-                return numA - numB;
-            });
+      availableWeeks = app.store
+        .all<Week>('pickem-weeks')
+        .filter((week) => week.seasonId() == this.selectedSeason)
+        .sort((a, b) => {
+          const numA = parseInt(String(a.weekNumber() || 0));
+          const numB = parseInt(String(b.weekNumber() || 0));
+          return numA - numB;
+        });
     }
 
     const currentPicks = this.attrs.picks || {};
@@ -282,7 +287,7 @@ export default class MatchesTab extends Component<IMatchesTabAttrs> {
                 <EventCard
                   event={event}
                   pick={pick}
-                  onMakePick={(eventId, outcome) => this.makePick(eventId, outcome)}
+                  onMakePick={(eventId: number, outcome: string) => this.makePick(eventId, outcome)}
                   isLoading={isLoading}
                 />
               );
@@ -292,11 +297,7 @@ export default class MatchesTab extends Component<IMatchesTabAttrs> {
 
         {this.hasMore && (
           <div className="LoadMore">
-             <Button
-              className="Button Button--primary"
-              loading={this.loading}
-              onclick={() => this.loadEvents(false)}
-            >
+            <Button className="Button Button--primary" loading={this.loading} onclick={() => this.loadEvents(false)}>
               {app.translator.trans('huseyinfiliz-pickem.lib.buttons.load_more')}
             </Button>
           </div>

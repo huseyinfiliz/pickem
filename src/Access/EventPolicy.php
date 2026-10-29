@@ -3,7 +3,7 @@
 namespace HuseyinFiliz\Pickem\Access;
 
 use Flarum\User\User;
-use Flarum\User\Access\AbstractPolicy; 
+use Flarum\User\Access\AbstractPolicy;
 use HuseyinFiliz\Pickem\Event;
 
 class EventPolicy extends AbstractPolicy

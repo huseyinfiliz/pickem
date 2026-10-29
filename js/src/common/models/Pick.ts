@@ -7,7 +7,7 @@ export default class Pick extends Model {
   eventId = Model.attribute<string | number>('eventId');
   selectedOutcome = Model.attribute<'home' | 'away' | 'draw'>('selectedOutcome');
   isCorrect = Model.attribute<boolean | null>('isCorrect');
-  
-  event = Model.hasOne<PickemEvent | false>('event');
-  user = Model.hasOne<User | false>('user');
+
+  event = Model.hasOne<PickemEvent>('event');
+  user = Model.hasOne<User>('user');
 }

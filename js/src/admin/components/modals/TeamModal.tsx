@@ -1,19 +1,22 @@
-import Modal from 'flarum/common/components/Modal';
+import Form from 'flarum/common/components/Form';
+import FormModal, { IFormModalAttrs } from 'flarum/common/components/FormModal';
+import app from 'flarum/admin/app';
+import type Mithril from 'mithril';
 import Button from 'flarum/common/components/Button';
 import { slug } from 'flarum/common/utils/string';
-import Team from '../../../common/models/Team'; 
+import Team from '../../../common/models/Team';
 
-interface ITeamModalAttrs {
+interface ITeamModalAttrs extends IFormModalAttrs {
   team?: Team | null;
   onsave: () => void;
 }
 
-export default class TeamModal extends Modal<ITeamModalAttrs> {
+export default class TeamModal extends FormModal<ITeamModalAttrs> {
   private team: Team | null | undefined;
   private name: string = '';
   private slug: string = '';
   private logoPath: string = '';
-  private loading: boolean = false;
+  loading: boolean = false;
   // YENİ: Yükleme durumu için state
   private uploadLoading: boolean = false;
 
@@ -31,19 +34,17 @@ export default class TeamModal extends Modal<ITeamModalAttrs> {
     return 'TeamModal Modal--small';
   }
 
-  title(): string {
-    return this.team
-      ? app.translator.trans('huseyinfiliz-pickem.lib.actions.edit')
-      : app.translator.trans('huseyinfiliz-pickem.lib.actions.create');
+  title(): Mithril.Children {
+    return this.team ? app.translator.trans('huseyinfiliz-pickem.lib.actions.edit') : app.translator.trans('huseyinfiliz-pickem.lib.actions.create');
   }
 
   content() {
     // FoF Upload uzantısının aktif olup olmadığını kontrol et
-    const hasFofUpload = 'fof-upload' in app.data.extensions;
+    const hasFofUpload = 'fof-upload' in (app.data.extensions ?? {});
 
     return (
       <div className="Modal-body">
-        <div className="Form">
+        <Form>
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-pickem.lib.form.name')}</label>
             <input
@@ -65,31 +66,44 @@ export default class TeamModal extends Modal<ITeamModalAttrs> {
               className="FormControl"
               type="text"
               value={this.slug}
-              oninput={(e: InputEvent) => { this.slug = (e.target as HTMLInputElement).value; }}
+              oninput={(e: InputEvent) => {
+                this.slug = (e.target as HTMLInputElement).value;
+              }}
             />
           </div>
 
           <div className="Form-group">
             <label>{app.translator.trans('huseyinfiliz-pickem.lib.form.logo_url')}</label>
-            
-            {/* YENİ: Input ve Upload butonu yan yana */}
-            <div style={{ display: 'flex', gap: '8px' }}>
+
+            {}
+            <div
+              style={{
+                display: 'flex',
+                gap: '8px',
+              }}
+            >
               <input
                 className="FormControl"
                 type="text"
                 value={this.logoPath}
-                oninput={(e: InputEvent) => { this.logoPath = (e.target as HTMLInputElement).value; }}
+                oninput={(e: InputEvent) => {
+                  this.logoPath = (e.target as HTMLInputElement).value;
+                }}
                 placeholder="https://example.com/logo.png"
-                style={{ flex: 1 }}
+                style={{
+                  flex: 1,
+                }}
               />
-              
+
               {hasFofUpload && (
                 <>
                   <input
                     id="pickem-logo-upload"
                     type="file"
                     accept="image/*"
-                    style={{ display: 'none' }}
+                    style={{
+                      display: 'none',
+                    }}
                     onchange={this.handleUpload.bind(this)}
                   />
                   <Button
@@ -97,8 +111,8 @@ export default class TeamModal extends Modal<ITeamModalAttrs> {
                     icon="fas fa-cloud-upload-alt"
                     loading={this.uploadLoading}
                     onclick={() => {
-                        const fileInput = document.getElementById('pickem-logo-upload');
-                        if (fileInput) fileInput.click();
+                      const fileInput = document.getElementById('pickem-logo-upload');
+                      if (fileInput) fileInput.click();
                     }}
                     title="Upload with FoF Upload"
                     type="button"
@@ -108,27 +122,35 @@ export default class TeamModal extends Modal<ITeamModalAttrs> {
             </div>
 
             {this.logoPath && (
-              <div style={{ marginTop: '10px' }}>
+              <div
+                style={{
+                  marginTop: '10px',
+                }}
+              >
                 <img
                   src={this.logoPath}
                   alt="Logo preview"
-                  style={{ maxWidth: '100px', maxHeight: '100px', border: '1px solid #ddd', padding: '5px', borderRadius: '4px' }}
-                  onerror={(e: any) => { e.target.style.display = 'none'; }}
+                  style={{
+                    maxWidth: '100px',
+                    maxHeight: '100px',
+                    border: '1px solid #ddd',
+                    padding: '5px',
+                    borderRadius: '4px',
+                  }}
+                  onerror={(e: any) => {
+                    e.target.style.display = 'none';
+                  }}
                 />
               </div>
             )}
           </div>
 
           <div className="Form-group">
-            <Button
-              className="Button Button--primary"
-              type="submit"
-              loading={this.loading}
-            >
+            <Button className="Button Button--primary" type="submit" loading={this.loading}>
               {app.translator.trans('huseyinfiliz-pickem.lib.buttons.save')}
             </Button>
           </div>
-        </div>
+        </Form>
       </div>
     );
   }
@@ -151,7 +173,7 @@ export default class TeamModal extends Modal<ITeamModalAttrs> {
         method: 'POST',
         url: app.forum.attribute('apiUrl') + '/fof/upload',
         body: formData,
-        serialize: (raw: any) => raw // FormData'yı JSON'a çevirme, olduğu gibi gönder
+        serialize: (raw: any) => raw, // FormData'yı JSON'a çevirme, olduğu gibi gönder
       });
 
       // Gelen yanıttan URL'i al (FoF Upload JSON:API standardı kullanır)
@@ -179,12 +201,10 @@ export default class TeamModal extends Modal<ITeamModalAttrs> {
       logoPath: this.logoPath,
     };
     try {
-      const promise = this.team
-        ? this.team.save(data)
-        : app.store.createRecord('pickem-teams').save(data);
+      const promise = this.team ? this.team.save(data) : app.store.createRecord('pickem-teams').save(data);
 
       await promise;
-      this.attrs.onsave(); 
+      this.attrs.onsave();
       this.hide();
     } catch (error: any) {
       this.loading = false;

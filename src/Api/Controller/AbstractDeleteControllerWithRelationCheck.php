@@ -2,7 +2,6 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
-use Flarum\Api\Controller\AbstractDeleteController;
 use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
 use Illuminate\Contracts\Translation\Translator;
@@ -11,17 +10,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 abstract class AbstractDeleteControllerWithRelationCheck extends AbstractDeleteController
 {
-    /**
-     * @var Translator
-     */
-    protected $translator;
-
-    /**
-     * @param Translator $translator
-     */
-    public function __construct(Translator $translator)
+    public function __construct(protected Translator $translator)
     {
-        $this->translator = $translator;
     }
 
     /**
@@ -48,14 +38,14 @@ abstract class AbstractDeleteControllerWithRelationCheck extends AbstractDeleteC
     /**
      * {@inheritdoc}
      */
-    protected function delete(ServerRequestInterface $request)
+    protected function delete(ServerRequestInterface $request): void
     {
         $actor = RequestUtil::getActor($request);
         $actor->assertCan('pickem.manage');
 
         $id = $request->getQueryParams()['id'];
         $modelClass = $this->getModelClass();
-        
+
         /** @var Model $model */
         $model = $modelClass::findOrFail($id);
 

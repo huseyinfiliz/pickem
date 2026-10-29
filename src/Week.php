@@ -4,6 +4,7 @@ namespace HuseyinFiliz\Pickem;
 
 use Flarum\Database\AbstractModel;
 use Flarum\Database\ScopeVisibilityTrait;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property int $id
@@ -17,6 +18,7 @@ use Flarum\Database\ScopeVisibilityTrait;
  */
 class Week extends AbstractModel
 {
+    use HasFactory;
     use ScopeVisibilityTrait;
 
     // YENİ EKLENDİ: Zaman damgalarını otomatik yönet

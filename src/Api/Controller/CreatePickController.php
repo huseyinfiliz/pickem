@@ -2,10 +2,9 @@
 
 namespace HuseyinFiliz\Pickem\Api\Controller;
 
-use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Foundation\ValidationException;
 use Flarum\Http\RequestUtil;
-use HuseyinFiliz\Pickem\Api\Serializer\PickSerializer;
+use HuseyinFiliz\Pickem\Api\Resource\PickResource;
 use HuseyinFiliz\Pickem\Event;
 use HuseyinFiliz\Pickem\Pick;
 use HuseyinFiliz\Pickem\Job\RecalculateUserScoreJob;
@@ -13,20 +12,14 @@ use Illuminate\Contracts\Bus\Dispatcher;
 use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
-use Tobscure\JsonApi\Document;
 
 class CreatePickController extends AbstractCreateController
 {
-    public $serializer = PickSerializer::class;
+    public $resource = PickResource::class;
     public $include = ['event', 'event.homeTeam', 'event.awayTeam', 'user'];
 
-    protected $bus;
-    protected $translator;
-
-    public function __construct(Dispatcher $bus, Translator $translator)
+    public function __construct(protected Dispatcher $bus, protected Translator $translator)
     {
-        $this->bus = $bus;
-        $this->translator = $translator;
     }
 
     protected function data(ServerRequestInterface $request, Document $document)
@@ -35,7 +28,7 @@ class CreatePickController extends AbstractCreateController
         $actor->assertCan('pickem.makePicks');
 
         $data = Arr::get($request->getParsedBody(), 'data.attributes', []);
-        
+
         $eventId = Arr::get($data, 'eventId');
         $selectedOutcome = Arr::get($data, 'selectedOutcome');
 
@@ -77,15 +70,15 @@ class CreatePickController extends AbstractCreateController
         ]);
 
         $isUpdate = $pick->exists;
-        $recalculateScore = false; 
+        $recalculateScore = false;
 
         $pick->selected_outcome = $selectedOutcome;
 
         if ($isUpdate && $pick->isDirty('selected_outcome')) {
             $pick->is_correct = null;
-            
+
             if ($event->isFinished() || $event->isClosed()) {
-                 $recalculateScore = true;
+                $recalculateScore = true;
             }
         }
 

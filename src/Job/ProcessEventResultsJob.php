@@ -11,14 +11,8 @@ use HuseyinFiliz\Pickem\PickemScoringService;
 
 class ProcessEventResultsJob extends AbstractJob
 {
-    /**
-     * @var int
-     */
-    protected $eventId;
-
-    public function __construct(int $eventId)
+    public function __construct(protected int $eventId)
     {
-        $this->eventId = $eventId;
     }
 
     public function handle(PickemScoringService $scoringService, NotificationSyncer $notifications)

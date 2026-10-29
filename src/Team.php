@@ -4,7 +4,9 @@ namespace HuseyinFiliz\Pickem;
 
 use Flarum\Database\AbstractModel;
 use Flarum\Database\ScopeVisibilityTrait;
-use Flarum\Settings\SettingsRepositoryInterface; // URL oluşturmak için eklendi
+use Flarum\Http\UrlGenerator;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+// URL oluşturmak için eklendi
 use Illuminate\Support\Str; // URL kontrolü için eklendi
 
 /**
@@ -19,6 +21,7 @@ use Illuminate\Support\Str; // URL kontrolü için eklendi
  */
 class Team extends AbstractModel
 {
+    use HasFactory;
     use ScopeVisibilityTrait;
 
     // YENİ EKLENDİ: Zaman damgalarını otomatik yönet
@@ -51,7 +54,7 @@ class Team extends AbstractModel
 
     /**
      * YENİ: Logo URL'si için Accessor.
-     * Bu metot, logo_path'in tam bir URL mi yoksa göreceli bir yol mu 
+     * Bu metot, logo_path'in tam bir URL mi yoksa göreceli bir yol mu
      * olduğunu kontrol ederek doğru URL'yi döndürür.
      */
     public function getLogoUrlAttribute(): ?string
@@ -69,8 +72,8 @@ class Team extends AbstractModel
         // Eğer göreceli bir yol ise (örn: assets/teams/logo.png),
         // Flarum'un temel URL'si ile birleştir.
         // Flarum 1.8+ için Ayarlar deposunu (SettingsRepository) kullanmak standart yoldur.
-        $baseUrl = resolve(SettingsRepositoryInterface::class)->get('base_url');
-        
+        $baseUrl = resolve(UrlGenerator::class)->to('forum')->base();
+
         return rtrim($baseUrl, '/') . '/' . ltrim($this->logo_path, '/');
     }
 }

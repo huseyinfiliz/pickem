@@ -7,7 +7,8 @@ use Illuminate\Validation\Rule;
 
 class SeasonValidator extends AbstractValidator
 {
-    protected function getRules()
+    public ?\Illuminate\Database\Eloquent\Model $model = null;
+    protected function getRules(): array
     {
         $id = $this->model ? $this->model->id : null;
         $required = $this->model ? 'sometimes' : 'required';
@@ -26,7 +27,7 @@ class SeasonValidator extends AbstractValidator
         ];
     }
 
-    protected function getMessages()
+    protected function getMessages(): array
     {
         return [
             // GÜNCELLENDİ: lib.messages.slug_unique
